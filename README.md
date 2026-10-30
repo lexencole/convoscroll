@@ -1,76 +1,76 @@
 <p align="center">
-  <img src="docs/brand/convoscroll-mark.png" alt="话卷" width="80">
+  <img src="docs/brand/convoscroll-mark.png" alt="ConvoScroll" width="80">
 </p>
 
-<h1 align="center">话卷 ConvoScroll</h1>
+<h1 align="center">ConvoScroll</h1>
 
-<p align="center">把值得留下的 AI 对话，做成适合阅读和分享的长图</p>
+<p align="center">Turn AI conversations worth keeping into readable, shareable scrolls</p>
 
 <p align="center">
-  <a href="https://convoscroll.lexencole.com"><strong>打开话卷</strong></a> ·
-  <a href="docs/USAGE.md">使用指南</a> ·
+  <a href="https://convoscroll.lexencole.com"><strong>Open ConvoScroll</strong></a> ·
+  <a href="docs/USAGE.en.md">User guide</a> ·
   <a href="skills/convoscroll/">Agent Skill</a>
 </p>
 
-<p align="center">简体中文 · <a href="README.en.md">English</a></p>
+<p align="center">English · <a href="README.zh-CN.md">简体中文</a></p>
 
-![话卷编辑界面与导出成图，展示对话、代码、公式和图表的排版](docs/images/showcase-zh.png)
+![The ConvoScroll editor and exported image, showing conversations, code, equations, and charts](docs/images/showcase-en.png)
 
 <p align="center">
-  网页编辑与 PNG 成图 · 查看完整示例：
-  <a href="docs/images/example-short-zh.png">简短问答</a> ·
-  <a href="docs/images/example-story-zh.png">长对话</a>
+  Web editor and PNG output · View full examples:
+  <a href="docs/images/example-short-en.png">Short Q&amp;A</a> ·
+  <a href="docs/images/example-story-en.png">Long conversation</a>
 </p>
 
-话卷是一款开源的 AI 对话排版工具。直接在网页上编辑，或让自己的 AI Agent 整理聊天内容，再导出清晰的 PNG。无需注册，编辑与出图都在浏览器中完成。
+ConvoScroll is an open-source tool for turning AI conversations into images. Edit in the browser, or ask your own AI agent to prepare the content, then export a crisp PNG. No account required. Editing and export run in your browser.
 
-## 从对话到成图
+## From conversation to image
 
-- **内容完整**：Markdown、代码高亮、LaTeX 公式、表格、图片和文件，以及可折叠的思考过程与工具记录。
-- **直接编辑**：点击文字即可修改；调整名字、模型与头像，移动或复制消息，随时撤销。
-- **适合分享**：选择画布宽度和清晰度，长对话按内容分段，导出与预览使用相同的排版。
-- **可以接着改**：草稿自动保存在当前浏览器；导出 `.convcanvas`，将对话与附件一起带走。
+- **Keep rich content.** Markdown, syntax-highlighted code, LaTeX equations, tables, images, files, and collapsible reasoning or tool records.
+- **Edit directly.** Click text to change it. Set names, models, and avatars, move or copy messages, and undo changes.
+- **Make it shareable.** Choose the canvas width and resolution. Split long conversations at content boundaries, with the same layout in preview and export.
+- **Keep an editable copy.** Drafts save in the current browser. Export a `.convcanvas` file to take the conversation and its attachments with you.
 
-## 开始使用
+## Get started
 
-1. **准备内容** — [打开话卷](https://convoscroll.lexencole.com)，从内置示例开始，或在左上角“文档”菜单中新建、导入 `.md` / `.convcanvas`。
-2. **调整排版** — 点击正文编辑，点击头像修改身份。在空白段落输入 `/`，添加代码、公式、表格或图片。
-3. **导出长图** — 点击“预览”查看效果，再点“导出 PNG”。宽度和清晰度在“文档 → 导出设置”中调整。
+1. **Add your content** — [Open ConvoScroll](https://convoscroll.lexencole.com) and start with a built-in sample, or use the top-left **Document** menu to create a conversation or import `.md` / `.convcanvas`.
+2. **Make it yours** — Click text to edit or an avatar to change the speaker. Type `/` in an empty paragraph to add code, equations, tables, or images.
+3. **Export an image** — Check the result with **Preview**, then choose **Export PNG**. Adjust width and resolution in **Document → Export settings**.
 
-要保留可编辑版本，选择“文档 → 导出项目”。更多操作见[使用指南](docs/USAGE.md)。
+Choose **Document → Export project** to keep an editable copy. See the [user guide](docs/USAGE.en.md) for more.
 
-## 让 AI Agent 帮你出图
+## Ask an AI agent to create the image
 
-把 [convoscroll Skill](skills/convoscroll/) 的完整目录添加到支持 Agent Skills 的客户端，然后提供选定的聊天、文字或截图：
+Add the complete [convoscroll Skill directory](skills/convoscroll/) to a client that supports Agent Skills, then provide selected chat messages, text, or screenshots:
 
-> 把这段对话用话卷做成长图，保留原文，给我 PNG 和可编辑的项目文件。
+> Turn this conversation into a ConvoScroll image. Keep the original wording and give me the PNG and editable project file.
 
-Agent 会整理内容，打开话卷导入、校对并出图。请使用支持浏览器操作和文件处理的 Agent，具体要求见 [Skill 说明](skills/convoscroll/SKILL.md)。
+The agent prepares the content, opens ConvoScroll, imports and checks it, then exports the image. Use an agent with browser and file capabilities. See the [Skill instructions](skills/convoscroll/SKILL.md) for requirements.
 
-## 隐私与保存
+## Privacy and storage
 
-话卷在浏览器中处理对话和附件，不会上传到话卷服务器。使用 Agent 时，内容由你选择的 AI 服务处理。
+ConvoScroll processes conversations and attachments in the browser without uploading them to its servers. When you use an agent, your chosen AI service handles the content.
 
-草稿保存在当前浏览器。备份或换设备时，请导出 `.convcanvas` 项目。详见[保存与隐私说明](docs/USAGE.md#保存与隐私)。
+Drafts stay in the current browser. Export a `.convcanvas` project to back up your work or move between devices. See [storage and privacy](docs/USAGE.en.md#storage-and-privacy) for details.
 
-## 本地运行
+## Run locally
 
-需要 Node.js 22.13 以上和 npm。下载或克隆仓库后，在项目目录运行：
+Use Node.js 22.13 or later and npm. Download or clone the repository, then run in its directory:
 
 ```bash
 npm ci
 npm run dev
 ```
 
-打开终端显示的本机地址。构建、测试、自部署和可选的离线命令行出图见[开发说明](docs/DEVELOPMENT.md)；格式集成见[项目与 Markdown 格式](docs/PROJECT_FORMAT.md)和 [Schema](docs/SCHEMA.md)。
+Open the local address printed in the terminal. The [development guide](docs/DEVELOPMENT.md) covers builds, tests, self-hosting, and optional offline command-line rendering. For format integrations, see the [project and Markdown format](docs/PROJECT_FORMAT.md) and [schema](docs/SCHEMA.md). Technical references are currently in Chinese.
 
-反馈问题或参与开发见[贡献指南](CONTRIBUTING.md)。
+See the [contributing guide](CONTRIBUTING.en.md) for bug reports and code changes.
 
-## 后续方向
+## Roadmap
 
-- 支持更多聊天背景与主题样式，并允许自定义。
-- 打包成独立程序。
+- More conversation backgrounds and themes, with customization.
+- A standalone application.
 
-## 许可证
+## License
 
-源码采用 [MIT License](LICENSE)。字体、图标和依赖的许可与署名见[第三方许可清单](public/THIRD_PARTY_NOTICES.txt)。
+Source code is available under the [MIT License](LICENSE). See [third-party notices](public/THIRD_PARTY_NOTICES.txt) for font, icon, and dependency licenses and attribution.

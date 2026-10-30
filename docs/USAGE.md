@@ -1,6 +1,6 @@
 # 话卷使用指南
 
-[打开话卷](https://convoscroll.lexencole.com) · [返回首页](../README.md) · [English](USAGE.en.md)
+[打开话卷](https://convoscroll.lexencole.com) · [返回首页](../README.zh-CN.md) · [English](USAGE.en.md)
 
 ## 编辑对话
 

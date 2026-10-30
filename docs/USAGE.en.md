@@ -1,6 +1,6 @@
 # ConvoScroll user guide
 
-[Open ConvoScroll](https://convoscroll.lexencole.com) · [Back to overview](../README.en.md) · [简体中文](USAGE.md)
+[Open ConvoScroll](https://convoscroll.lexencole.com) · [Back to overview](../README.md) · [简体中文](USAGE.md)
 
 ## Edit a conversation
 
