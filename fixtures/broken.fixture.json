@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 99,
+  "id": "fixture-broken-v1",
+  "metadata": {
+    "title": "Broken Fixture — 预期验证失败",
+    "subtitle": "有意包含：不兼容 schemaVersion、未知字段与 Block、重复 ID/Call ID、错误时间与状态、错误头像引用、未登记资产和孤立 ToolResult。",
+    "locale": "zh-CN",
+    "createdAt": "2026-04-01T00:00:00Z",
+    "updatedAt": "2026-04-01T00:10:00Z"
+  },
+  "canvas": {
+    "preset": "portrait",
+    "width": 480,
+    "scale": 3
+  },
+  "theme": {
+    "id": "warm-editorial-v1"
+  },
+  "messages": [
+    {
+      "id": "msg-broken-duplicate",
+      "role": "user",
+      "displayName": "虚构测试用户",
+      "timestamp": "April 1, 2026",
+      "status": "done",
+      "futureLabel": "Schema v1 不应该静默删除这个字段",
+      "blocks": [
+        {
+          "id": "block-broken-markdown",
+          "type": "markdown",
+          "source": "## 语义不完整的 Markdown\n\n**这个强调标记没有闭合，但 source 仍是合法字符串。"
+        },
+        {
+          "id": "block-broken-missing-asset",
+          "type": "image",
+          "assetId": "asset-not-registered",
+          "alt": "该引用在 assets 中不存在",
+          "caption": "预期语义诊断：ASSET_NOT_FOUND。",
+          "width": "full"
+        }
+      ]
+    },
+    {
+      "id": "msg-broken-duplicate",
+      "role": "assistant",
+      "displayName": "Broken Bot",
+      "model": "Broken Demo 0",
+      "avatarAssetId": "asset-broken-file",
+      "blocks": [
+        {
+          "id": "block-broken-unknown-type",
+          "type": "futureCarousel",
+          "slides": [
+            {
+              "title": "这不是 unsupported Block",
+              "body": "未知原始 type 应在 Adapter 层被转换，直接放入文档应验证失败。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "developer",
+      "displayName": "Missing ID Message",
+      "blocks": [
+        {
+          "id": "block-broken-message-without-id",
+          "type": "markdown",
+          "source": "这条 Message 有意缺失必填字段 `id`。"
+        }
+      ]
+    },
+    {
+      "id": "msg-broken-unknown-role",
+      "role": "unknown",
+      "displayName": "Unknown Without Source",
+      "blocks": [
+        {
+          "id": "block-broken-unknown-role",
+          "type": "markdown",
+          "source": "该 Message 使用 unknown 角色，但有意缺失 `sourceRole`。"
+        }
+      ]
+    },
+    {
+      "id": "msg-broken-invalid-tool",
+      "role": "assistant",
+      "displayName": "Broken Bot",
+      "blocks": [
+        {
+          "id": "block-broken-invalid-toolcall",
+          "type": "toolCall",
+          "callId": "call-broken-invalid",
+          "toolName": "invalid_timer",
+          "summary": "状态不在枚举中，持续时间也不应为负数。",
+          "input": {
+            "milliseconds": -250
+          },
+          "status": "finished",
+          "durationMs": -250,
+          "displayState": "expanded",
+          "exportState": "current"
+        },
+        {
+          "id": "block-broken-duplicate-toolcall",
+          "type": "toolCall",
+          "callId": "call-broken-invalid",
+          "toolName": "duplicate_call",
+          "summary": "这个 callId 有意与上一个 ToolCall 重复。",
+          "input": {},
+          "status": "error",
+          "displayState": "collapsed",
+          "exportState": "current"
+        }
+      ]
+    },
+    {
+      "id": "msg-broken-orphan-result",
+      "role": "tool",
+      "displayName": "orphan_tool",
+      "blocks": [
+        {
+          "id": "block-broken-orphan-result",
+          "type": "toolResult",
+          "callId": "call-never-declared",
+          "summary": "这是一个没有对应 ToolCall 的结果。",
+          "output": {
+            "value": 42
+          },
+          "status": "error",
+          "durationMs": 10,
+          "displayState": "collapsed",
+          "exportState": "collapsed"
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "id": "asset-broken-duplicate",
+      "kind": "image",
+      "fileName": "sample-landscape.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 2043,
+      "width": 960,
+      "height": 540,
+      "source": {
+        "kind": "fixture",
+        "path": "fixtures/assets/sample-landscape.svg"
+      }
+    },
+    {
+      "id": "asset-broken-duplicate",
+      "kind": "file",
+      "fileName": "duplicate-id.txt",
+      "mimeType": "text/plain",
+      "byteSize": 32,
+      "source": {
+        "kind": "local",
+        "storageKey": "fixture:broken:duplicate-id.txt"
+      }
+    },
+    {
+      "id": "asset-broken-file",
+      "kind": "file",
+      "fileName": "not-an-avatar.pdf",
+      "mimeType": "application/pdf",
+      "byteSize": 128,
+      "source": {
+        "kind": "local",
+        "storageKey": "fixture:broken:not-an-avatar.pdf"
+      }
+    }
+  ]
+}

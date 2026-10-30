@@ -1,0 +1,75 @@
+{
+  "name": "convoscroll",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "bin": {
+    "convoscroll": "cli/convoscroll.mjs"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "npm run typecheck && vite build",
+    "build:cli": "vite build --mode cli",
+    "preview": "vite preview --host 127.0.0.1",
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cli": "node --test \"cli/test/*.test.mjs\"",
+    "convoscroll": "node cli/convoscroll.mjs",
+    "licenses:generate": "node scripts/generate-third-party-notices.mjs",
+    "licenses:check": "node scripts/generate-third-party-notices.mjs --check",
+    "cloudflare:dev": "npm run build && WRANGLER_SEND_METRICS=false wrangler dev --local",
+    "cloudflare:dry-run": "npm run build && WRANGLER_SEND_METRICS=false wrangler deploy --no-autoconfig --dry-run",
+    "cloudflare:deploy": "npm run build && WRANGLER_SEND_METRICS=false wrangler deploy --no-autoconfig"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "5.3.0",
+    "@fontsource-variable/geist-mono": "5.3.0",
+    "@fontsource-variable/noto-sans-sc": "5.3.1",
+    "@shikijs/core": "4.4.3",
+    "@shikijs/engine-oniguruma": "4.4.3",
+    "@shikijs/langs": "4.4.3",
+    "@shikijs/themes": "4.4.3",
+    "@tiptap/core": "3.31.3",
+    "@tiptap/extension-mathematics": "3.31.3",
+    "@tiptap/extension-table": "3.31.3",
+    "@tiptap/pm": "3.31.3",
+    "@tiptap/react": "3.31.3",
+    "@tiptap/starter-kit": "3.31.3",
+    "fflate": "0.8.3",
+    "katex": "0.19.0",
+    "mdast-util-to-markdown": "2.1.2",
+    "modern-screenshot": "4.7.0",
+    "playwright-core": "1.63.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-markdown": "10.1.0",
+    "rehype-katex": "7.0.1",
+    "remark-gfm": "4.0.1",
+    "remark-math": "6.0.0",
+    "remark-parse": "11.0.0",
+    "remark-stringify": "11.0.0",
+    "shiki": "4.4.3",
+    "unified": "11.0.5"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.2",
+    "@types/node": "26.2.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "6.1.0",
+    "jsdom": "29.1.1",
+    "typescript": "7.0.2",
+    "vite": "8.2.4",
+    "vitest": "4.1.12",
+    "wrangler": "4.153.0"
+  },
+  "overrides": {
+    "katex": "$katex"
+  },
+  "license": "MIT"
+}

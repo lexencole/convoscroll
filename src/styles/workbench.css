@@ -1,0 +1,800 @@
+/* Workbench chrome. One stylesheet, loaded after editor.css by main.tsx.
+   It frames the canvas but never redefines ConversationCanvas or Theme v1 tokens;
+   editing controls float above content so the editing layout matches the export. */
+
+/* ------------------------------------------------------------------ Page */
+html:has(.workbench) { background: var(--ui-workspace); }
+.workbench { min-height: 100vh; padding: var(--space-3) 0 var(--space-10); background: var(--ui-workspace); color: var(--ui-ink); }
+.workbench .app-icon { width: var(--ui-icon); height: var(--ui-icon); flex: none; }
+.brand-mark { width: var(--ui-brand-size); height: var(--ui-brand-size); object-fit: contain; flex: none; }
+
+/* Base for chrome buttons; canvas disclosures keep their renderer styles. */
+.workbench button:where(:not(.trace-card__toggle, .unsupported-card__toggle, .select-field__trigger, .workbench-title)) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--ui-control);
+  padding: 0 var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--ui-radius-pill);
+  background: transparent;
+  color: var(--ui-muted);
+  font: inherit;
+  font-size: var(--ui-font);
+  font-weight: var(--ui-weight-medium);
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.workbench button:where(:not(.trace-card__toggle, .unsupported-card__toggle, .select-field__trigger, .workbench-title)):not(:disabled):hover { background: var(--ui-surface-hover); color: var(--ui-ink); }
+.workbench button:where(:not(.trace-card__toggle, .unsupported-card__toggle, .select-field__trigger, .workbench-title)):disabled { opacity: 0.4; cursor: default; }
+.workbench button:where(:not(.trace-card__toggle, .unsupported-card__toggle, .select-field__trigger, .workbench-title)):focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: var(--ui-focus-offset); }
+.workbench .workbench-primary,
+.workbench .export-control__button,
+.workbench-settings button.workbench-primary {
+  border-color: transparent;
+  /* Keep an opaque base when hover removes the gradient during the color transition. */
+  background: linear-gradient(var(--ui-accent-top), var(--ui-accent)) var(--ui-accent);
+  color: var(--ui-on-accent);
+  font-weight: var(--ui-weight-medium);
+  box-shadow: var(--ui-shadow-primary);
+}
+.workbench .workbench-primary:not(:disabled):hover,
+.workbench .export-control__button:not(:disabled):hover,
+.workbench-settings button.workbench-primary:not(:disabled):hover {
+  background: var(--ui-accent-hover);
+  color: var(--ui-surface);
+  filter: none;
+}
+.workbench-feedback { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); max-width: min(var(--ui-toolbar-width), calc(100% - var(--space-6))); margin: var(--space-3) auto; padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); border-radius: var(--ui-radius-md); background: var(--color-error-soft); color: var(--ui-danger); font-size: var(--ui-font-sm); }
+.workbench-feedback > span { flex: 1; min-width: 0; }
+.workbench-feedback > button { flex: none; }
+.workbench-feedback--diagnostic { display: grid; }
+
+/* --------------------------------------------------------------- App bar */
+.workbench-chrome { position: sticky; z-index: var(--ui-layer-toolbar); top: var(--space-3); pointer-events: none; }
+.workbench-chrome > * { pointer-events: auto; }
+.workbench .inline-app-header { display: flex; flex-wrap: nowrap; align-items: center; gap: var(--ui-header-gap); height: var(--ui-header-height); min-height: var(--ui-header-height); margin: 0 var(--space-2) 0 var(--space-4); padding: var(--space-2) var(--ui-bar-padding) var(--space-2) var(--ui-brand-padding); border: 0; border-radius: var(--ui-radius-pill); background: transparent; }
+.workbench .inline-app-header[data-scrolled] { background: var(--ui-surface-glass); backdrop-filter: blur(var(--ui-bar-blur)) saturate(1.4); -webkit-backdrop-filter: blur(var(--ui-bar-blur)) saturate(1.4); box-shadow: var(--ui-shadow-bar); }
+.workbench .document-menu__trigger--brand { display: inline-flex; align-items: center; gap: var(--space-2); height: var(--ui-control-lg); padding: 0 var(--space-2); margin-inline: calc(-1 * var(--space-2)); border: 0; background: transparent; color: var(--ui-ink); }
+.workbench .document-menu__trigger--brand:not(:disabled):is(:hover, :focus-visible, [aria-expanded=true]) { background: var(--ui-surface); box-shadow: var(--ui-shadow-selected); }
+.workbench .inline-app-header[data-scrolled] .document-menu__trigger--brand:not(:disabled):is(:hover, :focus-visible, [aria-expanded=true]) { background: var(--ui-press); box-shadow: none; }
+.workbench .document-menu__trigger--brand strong { font-size: var(--ui-font-brand); font-weight: var(--ui-weight-strong); }
+.workbench .document-menu__trigger--brand > .app-icon { width: var(--ui-font-brand-chevron); height: var(--ui-font-brand-chevron); color: var(--ui-muted); }
+.workbench .inline-save-status { display: inline-flex; align-items: center; gap: var(--ui-space-small); margin: 0; color: var(--ui-muted); font-size: var(--ui-font-label); white-space: nowrap; }
+.workbench .inline-save-status .app-icon { color: var(--ui-success); }
+.workbench .inline-save-status[data-state=pending] .app-icon { color: var(--ui-muted); }
+.workbench .inline-save-status[data-state=error] .app-icon { color: var(--ui-danger); }
+.workbench .inline-app-actions { display: flex; flex-wrap: nowrap; align-items: center; gap: var(--space-2); width: auto; margin-left: auto; }
+.workbench .workbench-mode { width: var(--ui-control); height: var(--ui-control); padding: 0; }
+.workbench .inline-app-actions .export-control { width: auto; min-width: 0; }
+.workbench .export-control__button { gap: var(--ui-space-small); min-height: var(--ui-control-lg); padding: 0 var(--ui-button-padding); border-radius: var(--ui-radius-pill); font-size: var(--ui-font); }
+.workbench .export-control__button .app-icon, .workbench-primary .app-icon { stroke-width: 1.75px; }
+.document-menu__save { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3); color: var(--ui-muted); font-size: var(--ui-font-sm); border-top: 1px solid var(--ui-line); }
+.document-menu__save .app-icon { width: var(--ui-icon); height: var(--ui-icon); }
+@supports not (backdrop-filter: blur(1px)) { .workbench .inline-app-header[data-scrolled] { background: var(--ui-surface); } }
+@media (prefers-reduced-transparency: reduce) { .workbench .inline-app-header[data-scrolled] { background: var(--ui-surface); backdrop-filter: none; -webkit-backdrop-filter: none; } }
+
+/* ------------------------------------------------------- Editing toolbar */
+.workbench .select-field,
+body:has(.workbench) :is(.workbench-settings, .export-dialog) .select-field { width: fit-content; max-width: 100%; }
+.workbench .inline-toolbar { position: relative; top: auto; display: flex; flex-wrap: nowrap; align-items: center; gap: var(--space-1); width: max-content; max-width: calc(100% - var(--space-8)); height: var(--ui-toolbar-height); min-height: var(--ui-toolbar-height); margin: var(--ui-toolbar-gap) auto 0; padding: var(--ui-space-small) var(--space-2); border: 0; border-radius: var(--ui-radius-pill); background: linear-gradient(var(--ui-surface),var(--ui-workspace)); box-shadow: var(--ui-shadow-control); }
+.workbench .inline-toolbar[hidden] { display: none; }
+.workbench .inline-toolbar-host { display: flex; flex: 0 1 auto; flex-wrap: nowrap; align-items: center; min-width: 0; }
+.workbench .inline-toolbar-host:empty { display: none; }
+.workbench .inline-history-tools { display: flex; flex-wrap: nowrap; gap: var(--space-1); padding-left: var(--space-2); margin-left: var(--space-1); padding-right: 0; border: 0; border-left: 1px solid var(--ui-line); }
+.workbench :is(.inline-history-tools .icon-button, .inline-format-tools button:not(.select-field__trigger, .inline-format-placeholder)) { width: var(--ui-control); min-width: var(--ui-control); height: var(--ui-control); min-height: var(--ui-control); padding: 0; border: 0; border-radius: var(--ui-radius-pill); background: transparent; color: var(--ui-muted); font-size: var(--ui-toolbar-font-size); }
+.workbench .inline-format-tools button[aria-pressed=true] { background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
+/* The size rule above also sets a transparent surface; these states must follow it. */
+.workbench .inline-toolbar :is(.inline-format-tools, .inline-history-tools) button:not(:disabled, .select-field__trigger):is(:hover, :focus-visible) { background: var(--ui-surface-hover); color: var(--ui-ink); }
+.workbench .inline-toolbar .inline-format-tools button[aria-pressed=true]:not(:disabled):is(:hover, :focus-visible) { background: var(--ui-accent-soft-hover); color: var(--ui-accent-ink); }
+.workbench .inline-format-tools { display: flex; flex-wrap: nowrap; align-items: center; gap: var(--space-1); padding: 0; border: 0; }
+.workbench .inline-format-tools :is(.select-field, .inline-format-placeholder) { flex: none; width: var(--ui-format-width); min-width: 0; }
+.workbench .inline-format-placeholder { padding: 0 var(--space-2); color: var(--ui-muted); font-size: var(--ui-toolbar-font-size); }
+.workbench .inline-format-placeholder .app-icon { width: var(--ui-font-brand-chevron); }
+.workbench .inline-format-tools .select-field__trigger { min-height: var(--ui-control); gap: var(--space-1); padding: 0 var(--space-2); border: 0; border-radius: var(--ui-radius-pill); background: transparent; box-shadow: none; color: var(--ui-muted); font-size: var(--ui-toolbar-font-size); font-weight: var(--ui-weight-medium); }
+.workbench .inline-format-tools .select-field__chevron { width: var(--ui-font-brand-chevron); height: var(--ui-font-brand-chevron); flex-basis: var(--ui-font-brand-chevron); }
+.workbench .inline-format-tools .select-field__trigger:hover:not(:disabled), .workbench .inline-format-tools .select-field__trigger[aria-expanded=true] { background: var(--ui-accent-soft); box-shadow: none; }
+.workbench .inline-format-tools .select-field__trigger:focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: calc(-1 * var(--ui-focus-width)); box-shadow: none; }
+.workbench .select-field--toolbar .select-field__trigger, .select-field__menu--toolbar .select-field__option { font-size: var(--ui-toolbar-font-size); }
+.workbench .inline-code-language { display: flex; flex-wrap: nowrap; align-items: center; gap: var(--space-1); min-width: 0; }
+.workbench .inline-code-language .select-field { width: var(--ui-code-language-width); }
+.workbench .inline-code-language input { width: 8ch; min-width: 0; min-height: var(--ui-control); padding: 0 var(--space-2); border: 0; border-radius: var(--ui-radius-pill); background: var(--ui-field-background); font-size: var(--ui-font-field); }
+.workbench .inline-code-language input:focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); }
+
+/* A separate paint layer keeps the native selection and text advances intact. */
+.inline-prose[data-italic-caret] { caret-color: transparent; }
+.inline-italic-caret { position: fixed; z-index: var(--ui-layer-chip); width: var(--ui-caret-width); background: var(--color-accent); transform: skewX(var(--ui-italic-caret-angle)); transform-origin: center; pointer-events: none; user-select: none; }
+.inline-italic-caret[data-edge=start] { translate: calc(-1 * var(--ui-italic-caret-gap)) 0; }
+.inline-italic-caret[data-edge=end] { translate: var(--ui-italic-caret-gap) 0; }
+@keyframes ui-caret-blink { 50% { opacity: 0; } }
+
+/* ----------------------------------------------------------------- Stage */
+/* Clip only sideways (the unscaled phone host); the paper shadow must not be cut off. */
+.workbench .inline-canvas-stage { min-height: 0; margin-top: var(--ui-canvas-gap); padding: 0; overflow-x: clip; overflow-y: visible; }
+/* Only the paper in the editor is rounded; the exported PNG stays rectangular. Editing controls stay inside the canvas, so clipping cuts only the corners. */
+.workbench .inline-canvas-stage .preview-frame { overflow: clip; border-radius: var(--ui-radius-lg); box-shadow: var(--ui-shadow-paper); }
+.workbench .inline-canvas-stage .conversation-canvas { box-shadow: none; }
+
+/* --------------------------------------------- Canvas editing layer
+   Controls are absolutely positioned inside the canvas: they never add height,
+   never cross the canvas edge, and compensate the phone preview scale. */
+.workbench .preview-scale-host {
+  --ui-c-chip: calc(var(--ui-chip) / var(--preview-scale, 1));
+  --ui-c-add-chip: calc(var(--ui-add-chip) / var(--preview-scale, 1));
+  --ui-c-icon: calc(var(--ui-icon) / var(--preview-scale, 1));
+  --ui-c-font: calc(var(--ui-font-sm) / var(--preview-scale, 1));
+  --ui-c-offset: calc(var(--ui-chip-offset) / var(--preview-scale, 1));
+  --ui-c-radius: var(--ui-radius-pill);
+  --ui-c-pad: calc(2px / var(--preview-scale, 1));
+}
+.workbench .message { position: relative; }
+.workbench .workbench-block { position: relative; min-width: 0; }
+.workbench .workbench-block:focus { outline: none; }
+
+/* One floating chip language for item tools, add-content and header editing. */
+.workbench :is(.workbench-item-tools, .workbench-add-trigger, .workbench-header-edit > span) {
+  border: 1px solid var(--ui-line);
+  border-radius: var(--ui-c-radius);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-float);
+}
+.workbench .workbench-item-tools { display: flex; align-items: center; gap: 0; padding: var(--ui-c-pad); }
+.workbench .workbench-item-tools button { width: var(--ui-c-chip); min-width: 0; height: var(--ui-c-chip); min-height: 0; padding: 0; border: 0; border-radius: calc(var(--ui-c-radius) - var(--ui-c-pad)); }
+.workbench .workbench-item-tools .app-icon { width: var(--ui-c-icon); height: var(--ui-c-icon); }
+.workbench .workbench-item-tools .workbench-menu-trigger[aria-expanded=true] { background: var(--ui-surface-hover); color: var(--ui-ink); }
+.workbench .workbench-drag { touch-action: none; cursor: grab; user-select: none; }
+/* Touch: tool chips look as compact as the add chip (32px) while their invisible
+   hit area still reaches the 44px target. */
+@media (any-pointer: coarse) {
+  .workbench .workbench-item-tools button { position: relative; width: var(--ui-c-chip); height: var(--ui-c-add-chip); }
+  .workbench .workbench-item-tools button::after { content: ""; position: absolute; inset: calc((var(--ui-c-add-chip) - var(--ui-c-chip)) / 2) 0; }
+  /* There is no Tab key to follow. */
+  .workbench .inline-tool-hint { display: none; }
+}
+.workbench .workbench-drag:active { cursor: grabbing; }
+
+/* Message actions sit at the far end of the identity row. */
+.workbench-message-heading { position: relative; margin-bottom: var(--space-3); }
+.workbench-message-heading > .message__header { margin-bottom: 0; }
+.workbench-message-tools { position: absolute; z-index: var(--ui-layer-chip); top: 50%; right: 0; transform: translateY(-50%); }
+.workbench .message--user .workbench-message-tools { right: auto; left: 0; }
+
+/* Block actions hover over the top-right corner; trace actions replace the status at row end. */
+.workbench .workbench-block-tools { position: absolute; z-index: var(--ui-layer-chip); top: calc(-1 * var(--ui-c-offset)); right: calc(-1 * var(--ui-c-offset)); display: flex; margin: 0; }
+.workbench .workbench-block--trace > .workbench-block-tools { top: calc((var(--size-touch-target) - var(--ui-c-chip)) / 2 - var(--ui-c-pad) - 1px); right: var(--space-2); }
+
+/* Identity and title are direct entry points to their settings. */
+.workbench .message__header[role=button] { position: relative; cursor: pointer; border-radius: var(--radius-xs); }
+.workbench .message__header[role=button]::after { content: ""; position: absolute; inset: calc(-1 * var(--space-1)) calc(-1 * var(--space-1)); }
+.workbench .message__header[role=button]:hover .message__identity strong { color: var(--ui-accent); }
+.workbench .message__header[role=button]:focus-visible { outline: none; }
+.workbench .message__header[role=button]:focus-visible .message__avatar { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: var(--ui-focus-offset); }
+.workbench .canvas-header { position: relative; }
+.workbench .workbench-title, .workbench .workbench-title-input { display: block; width: 100%; min-width: 0; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: var(--ui-radius-sm); background: transparent; color: inherit; font: inherit; letter-spacing: inherit; line-height: inherit; text-align: inherit; text-wrap: inherit; word-break: inherit; overflow-wrap: inherit; white-space: normal; }
+.workbench .workbench-title { position: relative; cursor: text; }
+.workbench .workbench-title:not(:disabled):hover { background: transparent; }
+.workbench .workbench-title[data-empty] { position: absolute; top: var(--canvas-header-padding-top); left: var(--canvas-header-padding-x); width: calc(100% - 2 * var(--canvas-header-padding-x)); min-height: calc(var(--size-touch-target) / var(--preview-scale, 1)); transform: translateY(-50%); }
+/* Expand the hit target inside the existing header padding without changing the title's layout. */
+.workbench .workbench-title::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, calc(var(--size-touch-target) / var(--preview-scale, 1))); transform: translateY(-50%); }
+.workbench-title-placeholder { position: absolute; top: 50%; left: 0; transform: translateY(-50%); color: var(--ui-faint); }
+.workbench .workbench-title-input { resize: none; overflow: hidden; border-radius: 0; outline: none; box-shadow: var(--ui-title-focus-shadow); }
+.workbench .workbench-title:focus-visible { border-radius: 0; outline: none; box-shadow: var(--ui-title-focus-shadow); }
+
+/* Text is edited in place; only an empty block reserves a tap target. */
+.workbench .workbench-editable { cursor: text; border-radius: var(--ui-radius-sm); }
+.workbench .workbench-editable:has(> .workbench-placeholder) { min-height: var(--size-touch-target); }
+.workbench .workbench-placeholder { margin: 0; padding-block: var(--space-2); color: var(--ui-faint); font-size: var(--font-md); }
+.workbench [role=button]:focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: var(--space-1); }
+.workbench .inline-editable-block:focus-within { box-shadow: none; }
+.workbench-block > .inline-notice { margin: 0 0 var(--space-3); padding-top: calc(var(--ui-c-chip) - var(--ui-c-offset) + var(--space-2)); color: var(--ui-danger); font-size: var(--ui-c-font); line-height: var(--line-control); text-wrap: pretty; }
+
+/* Adding content lives in the toolbar; only a message emptied of every block offers it in place. */
+.workbench .workbench-add-block { display: flex; padding-top: var(--space-2); }
+.workbench .message--user > .workbench-add-block { justify-content: flex-end; }
+.workbench .workbench-add-trigger { position: relative; gap: 4px; height: var(--ui-c-add-chip); min-height: 0; padding: 0 calc(10px / var(--preview-scale, 1)) 0 calc(var(--space-2) / var(--preview-scale, 1)); color: var(--ui-muted); font-size: var(--ui-c-font); }
+.workbench .workbench-add-trigger .app-icon { width: var(--ui-c-icon); height: var(--ui-c-icon); }
+.workbench .workbench-add-trigger:not(:disabled):hover,
+.workbench .workbench-add-trigger[aria-expanded=true] { background: var(--ui-surface); color: var(--ui-accent); border-color: var(--ui-line-hover); }
+
+/* Only the region under the pointer or keyboard shows its actions. */
+@media (hover: hover) and (pointer: fine) {
+  .workbench .workbench-item-tools { opacity: 0; pointer-events: none; }
+  .workbench .message:hover > .workbench-message-heading .workbench-item-tools,
+  .workbench .workbench-message-heading:focus-within .workbench-item-tools,
+  .workbench .workbench-block[data-current]:not(:has(.inline-editable-block)) > .workbench-block-tools .workbench-item-tools,
+  .workbench .workbench-block:not(:has(.inline-editable-block)):focus-within > .workbench-block-tools .workbench-item-tools,
+  .workbench .workbench-block-tools:focus-within .workbench-item-tools,
+  .workbench .workbench-item-tools:has([aria-expanded=true], .workbench-drag:active) { opacity: 1; pointer-events: auto; }
+  .workbench .workbench-toolbar-block { display: none; }
+}
+/* Touch shows actions only for the message and block being worked on. Text
+   blocks keep their actions in the context bar so the caret is never covered. */
+@media (hover: none), (pointer: coarse) {
+  .workbench .workbench-item-tools { opacity: 0; pointer-events: none; }
+  .workbench .message:has(.inline-editable-block:focus-within) > .workbench-message-heading .workbench-item-tools,
+  .workbench .workbench-message-heading:focus-within .workbench-item-tools,
+  .workbench .workbench-block:not(:has(.inline-editable-block, .workbench-editable)):focus-within > .workbench-block-tools .workbench-item-tools,
+  .workbench .workbench-block-tools:focus-within .workbench-item-tools,
+  .workbench .workbench-item-tools:has([aria-expanded=true], .workbench-drag:active),
+  /* iOS Safari does not focus a tapped button, so the text block loses focus before
+     the tap lands; keep the controls of the message being edited in place. */
+  .workbench .workbench-message-tools[data-current] .workbench-item-tools { opacity: 1; pointer-events: auto; }
+  .workbench .message__header[role=button]::after { inset: calc(-1 * var(--space-2)); }
+  /* The in-place add chip stays compact; its touch target still reaches 44px. */
+  .workbench .workbench-add-trigger::after { content: ""; position: absolute; inset: calc((var(--ui-add-chip) - var(--size-touch-target)) / 2 / var(--preview-scale, 1)); }
+}
+
+/* Drop markers sit in the gap between items, not on their borders. */
+.workbench :is(.message, .workbench-block)[data-drop-edge]::before,
+.workbench :is(.message, .workbench-block)[data-drop-edge]::after { position: absolute; z-index: var(--ui-layer-chip); left: 0; right: 0; height: 2px; border-radius: 1px; background: var(--ui-accent); pointer-events: none; }
+.workbench .message[data-drop-edge=before]::before { content: ""; top: calc(-1 * var(--stream-gap) / 2 - 1px); }
+.workbench .message[data-drop-edge=after]::after { content: ""; bottom: calc(-1 * var(--stream-gap) / 2 - 1px); }
+.workbench .workbench-block[data-drop-edge=before]::before { content: ""; top: calc(-1 * var(--space-3) / 2 - 1px); }
+.workbench .workbench-block[data-drop-edge=after]::after { content: ""; bottom: calc(-1 * var(--space-3) / 2 - 1px); }
+
+/* ------------------------------------------------------------ Add message */
+.workbench .workbench-add-message {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: fit-content;
+  max-width: calc(100% - var(--space-6));
+  margin: var(--space-6) auto 0;
+  padding: var(--space-1);
+  border: 1px solid var(--ui-line);
+  border-radius: var(--ui-radius-pill);
+  background: linear-gradient(var(--ui-surface),var(--ui-workspace));
+  box-shadow: var(--ui-shadow-control);
+}
+.workbench .workbench-add-message > button { min-height: var(--ui-control-lg); padding: 0 var(--ui-button-padding); color: var(--ui-ink); font-size: var(--ui-font-label); border-radius: var(--ui-radius-pill); }
+.workbench .workbench-add-message > button:not(:disabled, [aria-haspopup]):is(:hover, :focus-visible, :active) { background: var(--ui-accent-soft); color: var(--ui-accent-ink); }
+.workbench .workbench-add-message .workbench-menu-trigger { width: var(--ui-control-lg); min-height: var(--ui-control-lg); padding: 0; }
+
+/* ----------------------------------------------------------------- Menus */
+body:has(.workbench) :is(.workbench-action-menu, .document-menu__panel, .select-field__menu) {
+  gap: 0;
+  padding: var(--space-1);
+  border: 1px solid var(--ui-line);
+  border-radius: var(--ui-radius-lg);
+  background: var(--ui-surface);
+  box-shadow: var(--ui-shadow-surface);
+}
+.workbench-action-menu { position: fixed; z-index: var(--ui-layer-menu); width: min(var(--ui-menu-width), calc(100vw - var(--space-4))); overflow-y: auto; overscroll-behavior: contain; font-family: var(--font-family-body); }
+.workbench-action-menu__title { padding: 6px 10px 4px; color: var(--ui-faint); font-size: var(--ui-font-sm); font-weight: var(--ui-weight-medium); }
+.workbench-action-menu__group { margin-top: var(--space-1); padding-top: var(--space-1); border-top: 1px solid var(--ui-line); }
+body:has(.workbench) :is(.workbench-action-menu button, .document-menu__panel :is(button, a)) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--ui-menu-row);
+  padding: 0 var(--ui-bar-padding);
+  border: 0;
+  border-radius: var(--ui-radius-pill);
+  background: transparent;
+  color: var(--ui-ink);
+  font: inherit;
+  font-size: var(--ui-font);
+  font-weight: 400;
+  line-height: var(--line-control);
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+body:has(.workbench) :is(.workbench-action-menu button, .document-menu__panel :is(button, a)) .app-icon { width: var(--ui-icon); height: var(--ui-icon); flex: none; color: var(--ui-muted); }
+body:has(.workbench) :is(.workbench-action-menu button, .document-menu__panel :is(button, a)):is(:hover, :focus-visible):not(:disabled) { outline: none; background: var(--ui-surface-hover); color: var(--ui-ink); }
+body:has(.workbench) .workbench-action-menu button:disabled { opacity: 0.4; cursor: default; }
+.workbench-action-menu .is-danger,
+.workbench-action-menu .is-danger .app-icon { color: var(--ui-danger); }
+.workbench-action-menu__shortcut { margin-left: auto; color: var(--ui-faint); font-family: inherit; font-size: var(--ui-font-sm); }
+body:has(.workbench) .inline-slash-menu button.is-active:not(:disabled) { background: var(--ui-surface-hover); color: var(--ui-ink); }
+.inline-slash-menu button small { margin-left: auto; color: var(--ui-muted); font-size: var(--ui-font-sm); }
+.inline-slash-menu__empty { padding: var(--space-2); color: var(--ui-muted); font-size: var(--ui-font); }
+body:has(.workbench) .workbench-action-menu .is-danger:is(:hover, :focus-visible):not(:disabled) { background: var(--color-error-soft); color: var(--ui-danger); }
+.document-menu__group + .document-menu__group,
+.document-menu__panel > button + .document-menu__group { margin-top: var(--space-1); padding-top: var(--space-1); border-top: 1px solid var(--ui-line); }
+body:has(.workbench) .select-field__option { min-height: var(--ui-control); padding: 0 10px; border-radius: var(--ui-radius-sm); color: var(--ui-ink); }
+body:has(.workbench) .select-field__option.is-active { background: var(--ui-surface-hover); }
+body:has(.workbench) .select-field__menu:not(.select-field__menu--toolbar) .select-field__option { font-size: var(--ui-font-select); }
+body:has(.workbench) .select-field__option.is-selected { background: transparent; color: var(--ui-accent); font-weight: var(--ui-weight-strong); }
+body:has(.workbench) .select-field__option.is-selected.is-active { background: var(--ui-surface-hover); }
+
+/* ------------------------------------------------------- Settings panel */
+.workbench-settings {
+  position: fixed;
+  z-index: var(--ui-layer-panel);
+  display: flex;
+  flex-direction: column;
+  width: min(var(--ui-panel-width), calc(100vw - var(--space-6)));
+  max-height: 82vh;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--ui-line);
+  border-radius: var(--ui-radius-xl);
+  background: var(--ui-surface);
+  color: var(--ui-ink);
+  box-shadow: var(--ui-shadow-surface);
+  font-family: var(--font-family-body);
+  font-size: var(--ui-font);
+  --font-source-editor: var(--ui-font-field);
+}
+.workbench-settings:focus { outline: none; }
+.workbench-settings:has(.workbench-identity-fields) { width: min(var(--ui-identity-width), calc(100vw - var(--space-6))); }
+.workbench-settings > header { flex: none; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin: 0; padding: var(--space-4) var(--space-3) var(--space-2) var(--space-5); border: 0; background: transparent; }
+.workbench-settings h2 { margin: 0; font-size: var(--ui-font-title); font-weight: var(--ui-weight-strong); line-height: var(--line-dialog-title); letter-spacing: normal; }
+.workbench-settings > header small { display: block; margin-bottom: 2px; color: var(--ui-faint); font-size: var(--ui-font-sm); }
+.workbench-settings small { color: var(--ui-muted); font-size: var(--ui-font-sm); overflow-wrap: anywhere; }
+.workbench-settings .icon-button { width: var(--ui-control); height: var(--ui-control); flex: none; padding: 0; border: 0; border-radius: var(--ui-radius-pill); background: transparent; color: var(--ui-muted); }
+.workbench-settings .icon-button:hover:not(:disabled) { background: var(--ui-surface-hover); color: var(--ui-ink); }
+/* No reserved scrollbar gutter: with classic scrollbars it made the right margin wider than the left even when nothing scrolls. */
+.workbench-settings__scroll { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: var(--space-5); }
+.workbench-settings__scroll:has(> .workbench-identity-fields) { scroll-padding-bottom: calc(var(--ui-control) + var(--space-6) + var(--space-5)); }
+.workbench-settings__scroll > form { padding: var(--space-2) var(--space-5) 0; }
+.workbench-settings-fields { display: grid; gap: var(--space-5); min-width: 0; margin: 0; padding: 0; border: 0; }
+/* The old form editor's card clipped its contents to a rounded box, shaving the corners of the first and last fields. */
+.workbench-settings .block-editor { overflow: visible; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.workbench-settings .block-editor__fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); padding: 0; }
+.workbench-trace-fields { display: flex; flex-wrap: wrap; align-items: start; gap: var(--space-5) var(--space-6); min-width: 0; }
+.workbench-settings .editor-field,
+.workbench-settings .editor-field label,
+body:has(.workbench) :is(.export-dialog, .import-dialog, .inline-math-popover) .editor-field > label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: var(--ui-muted);
+  font-size: var(--ui-font-sm);
+  font-weight: var(--ui-weight-medium);
+  line-height: var(--line-control);
+}
+.workbench-settings .editor-field__error,
+body:has(.workbench) .editor-field__error { color: var(--ui-danger); }
+.workbench-settings .editor-field__label-row { flex-direction: column; align-items: stretch; gap: var(--space-2); }
+.workbench-settings :is(input:not([type=checkbox]), textarea, .select-field__trigger),
+body:has(.workbench) :is(.export-dialog, .inline-math-popover) :is(input:not([type=checkbox]), textarea, .select-field__trigger) {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--ui-field);
+  padding-inline: var(--space-4);
+  border: 1px solid var(--ui-field-border);
+  background: var(--ui-field-background);
+  color: var(--ui-ink);
+  font-family: var(--font-family-body);
+  font-size: var(--ui-font-field);
+  font-weight: 400;
+  line-height: var(--line-control);
+  box-shadow: none;
+}
+.workbench-settings :is(input:not([type=checkbox]), .select-field__trigger),
+body:has(.workbench) :is(.export-dialog, .inline-math-popover) :is(input:not([type=checkbox]), .select-field__trigger) { padding-block: 0; border-radius: var(--ui-radius-pill); }
+.workbench-settings button.select-field__trigger,
+body:has(.workbench) :is(.export-dialog, .inline-math-popover) button.select-field__trigger { font-size: var(--ui-font-select); }
+.workbench-settings .workbench-duration-field input { width: var(--ui-duration-width); max-width: 100%; font-variant-numeric: tabular-nums; }
+body:has(.workbench) .inline-math-popover { overflow-y: auto; overscroll-behavior: contain; }
+/* Multi-line fields breathe like the canvas text they edit. */
+.workbench-settings textarea,
+body:has(.workbench) .inline-math-popover textarea { border-radius: var(--ui-radius-md); padding-block: 9px; line-height: 1.6; resize: vertical; }
+.workbench-settings :is(.json-source, .markdown-source) { font-family: var(--font-family-mono); }
+.workbench-settings :is(input:not([type=checkbox]), textarea):hover:not(:disabled):not(:focus-visible),
+.workbench-settings .select-field__trigger:hover:not(:disabled):not(:focus-visible),
+body:has(.workbench) :is(.export-dialog, .inline-math-popover) :is(input:not([type=checkbox]), textarea, .select-field__trigger):hover:not(:disabled):not(:focus-visible) { border-color: var(--ui-field-hover-border); background: var(--ui-surface-hover); }
+.workbench-settings :is(input:not([type=checkbox]), textarea, .select-field__trigger):focus-visible,
+.workbench-settings .select-field__trigger[aria-expanded=true],
+body:has(.workbench) :is(.export-dialog, .inline-math-popover) :is(input:not([type=checkbox]), textarea, .select-field__trigger):focus-visible,
+body:has(.workbench) .export-dialog .select-field__trigger[aria-expanded=true] {
+  border-color: var(--ui-field-focus-border);
+  outline: none;
+  box-shadow: var(--ui-field-focus-shadow);
+  background: var(--ui-surface);
+}
+.workbench-settings [aria-invalid=true],
+body:has(.workbench) :is(.export-dialog, .inline-math-popover) [aria-invalid=true] {
+  --ui-field-border: var(--ui-danger);
+  --ui-field-hover-border: var(--ui-danger);
+  --ui-field-focus-border: var(--ui-danger);
+  border-color: var(--ui-danger);
+}
+.workbench-settings button:where(:not(.select-field__trigger)) { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: var(--ui-control); padding: 0 var(--space-3); border: 1px solid var(--ui-line-strong); border-radius: var(--ui-radius-pill); background: var(--ui-surface); color: var(--ui-ink); font: inherit; font-size: var(--ui-font); font-weight: var(--ui-weight-medium); white-space: nowrap; cursor: pointer; }
+.workbench-settings button:where(:not(.select-field__trigger)):not(:disabled):hover { background: var(--ui-surface-hover); }
+.workbench-settings button:disabled { opacity: 0.45; cursor: default; }
+.workbench-settings :is(button, input, textarea):focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: var(--ui-focus-offset); }
+.workbench-settings .markdown-tools { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: var(--space-1); }
+.workbench-settings .markdown-tools button { min-height: 28px; padding: 0 var(--space-2); border-color: transparent; background: var(--ui-surface-sunken); color: var(--ui-muted); font-size: var(--ui-font-sm); font-weight: 400; }
+/* Same footer as the identity panel: undo, redo and 完成 stay reachable while long fields scroll beneath. */
+.workbench-settings form > footer { position: sticky; bottom: 0; z-index: 1; display: flex; align-items: center; gap: 2px; margin: var(--space-5) 0 0; padding: var(--space-3) 0; border-top: 1px solid var(--ui-line); background: var(--ui-surface); }
+.workbench-settings form > .workbench-restore { margin-top: var(--space-3); }
+.workbench-settings button.workbench-primary { padding-inline: var(--ui-button-padding); }
+.workbench-settings .workbench-attachment-settings { display: grid; gap: var(--space-3); padding: var(--space-3); border: 0; border-radius: var(--ui-radius-md); background: var(--ui-surface-sunken); }
+.workbench-attachment-settings > span { font-size: var(--ui-font-sm); font-weight: var(--ui-weight-strong); }
+/* Same section pattern as the identity panel: a titled divider, fields below it. */
+.workbench-more-fields { border: 0; }
+.workbench-more-fields > summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: var(--ui-control); padding: var(--space-3) 0; color: var(--ui-ink); font-size: var(--ui-font); font-weight: var(--ui-weight-medium); list-style: none; cursor: pointer; }
+.workbench-more-fields > summary:hover { color: var(--ui-accent); }
+.workbench-more-fields > summary .app-icon { color: var(--ui-faint); }
+.workbench-more-fields > summary::-webkit-details-marker { display: none; }
+.workbench-more-fields[open] > summary .app-icon { transform: rotate(90deg); }
+.workbench-more-fields > summary:focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: var(--ui-focus-offset); }
+.workbench-more-fields > div { display: grid; gap: var(--space-4); padding: var(--space-1) 0 var(--space-2); }
+
+/* Identity panel: one flat surface, aligned edges, sticky footer for history. */
+/* The last section (更多设置) brings its own bottom space, so the collapsed row sits midway between its two lines. */
+.workbench-identity-fields > fieldset { gap: var(--space-5); padding: var(--space-2) var(--space-5) 0; }
+.workbench-identity-fields > :is(p, .workbench-attachment-settings, .identity-validation) { margin-inline: var(--space-5); }
+.identity-validation { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; gap: var(--space-2); margin-block: var(--space-3); }
+.identity-timestamp .identity-validation { margin: 0; }
+.workbench-identity-fields .identity-validation .inline-notice { width: 100%; margin: 0; font-size: var(--ui-font-sm); line-height: var(--line-control); word-break: normal; overflow-wrap: anywhere; }
+.identity-validation__example { display: block; }
+.workbench-identity-fields .identity-validation .workbench-restore { margin: 0; }
+.identity-timestamp { display: grid; gap: var(--space-3); min-width: 0; }
+.identity-timestamp__heading { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); color: var(--ui-muted); font-size: var(--ui-font-sm); font-weight: var(--ui-weight-medium); }
+.identity-timestamp__heading small { margin-left: var(--space-1); color: var(--ui-faint); font-weight: 400; }
+.workbench-settings .identity-timestamp__heading button { border-color: transparent; padding-inline: var(--space-2); font-size: var(--ui-font-sm); color: var(--ui-muted); }
+.message-date-trigger .is-placeholder { color: var(--ui-muted); }
+.message-date-trigger .app-icon { flex: none; color: var(--ui-faint); }
+.message-date-popover { position: fixed; z-index: var(--ui-layer-menu); width: min(var(--ui-calendar-width), 100vw); box-sizing: border-box; overflow: auto; overscroll-behavior: contain; padding: var(--space-2); border: 1px solid var(--ui-line); border-radius: var(--ui-radius-lg); background: var(--ui-surface); box-shadow: var(--ui-shadow-surface); color: var(--ui-ink); font-family: var(--font-family-body); font-size: var(--ui-font-select); }
+.message-date-popover header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-2); }
+.message-date-popover header strong { font-weight: var(--ui-weight-medium); }
+.message-date-popover button { display: inline-flex; justify-content: center; align-items: center; min-width: var(--ui-calendar-day); height: var(--ui-calendar-day); padding: 0 var(--space-2); border: 0; border-radius: var(--ui-radius-pill); background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.message-date-popover button:hover:not(:disabled) { background: var(--ui-surface-hover); }
+.message-date-popover button:disabled { opacity: .4; cursor: default; }
+.message-date-popover button:focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: var(--ui-focus-offset); }
+.message-date-previous .app-icon { transform: rotate(180deg); }
+.message-date-weekdays, .message-date-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; }
+.message-date-weekdays { align-items: center; min-height: var(--ui-calendar-day); color: var(--ui-muted); font-size: var(--ui-font-sm); }
+.message-date-week [role=gridcell] { display: grid; place-items: center; }
+.message-date-week button { width: var(--ui-calendar-day); padding: 0; font-variant-numeric: tabular-nums; }
+.message-date-week button.is-outside { color: var(--ui-faint); }
+.message-date-week button[aria-current=date] { box-shadow: inset 0 0 0 1px var(--ui-line-strong); }
+.message-date-week [aria-selected=true] button { background: var(--ui-accent-soft); color: var(--ui-accent); font-weight: var(--ui-weight-strong); }
+.message-date-popover footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-top: var(--space-2); padding-top: var(--space-2); border-top: 1px solid var(--ui-line); }
+.message-date-popover footer button { color: var(--ui-accent); }
+@media (any-pointer: coarse) {
+  .message-date-popover { --ui-calendar-day: var(--size-touch-target); padding: var(--space-1); }
+}
+.workbench-identity-fields > footer { position: sticky; bottom: 0; z-index: 1; display: flex; align-items: center; gap: 2px; margin-inline: var(--space-5); padding: var(--space-3) 0; border-top: 1px solid var(--ui-line); background: var(--ui-surface); }
+.workbench-save-note { flex: 1; min-width: 0; color: var(--ui-faint); font-size: var(--ui-font-sm); }
+.identity-scope { display: grid; gap: var(--space-1); font-size: var(--ui-font-sm); color: var(--ui-muted); }
+.identity-scope > div { display: flex; align-items: center; gap: var(--space-1); min-height: var(--ui-control); }
+.workbench-settings .identity-scope-help { position: relative; width: var(--ui-help-control); height: var(--ui-help-control); min-height: var(--ui-help-control); }
+.identity-scope-help .app-icon { width: var(--ui-icon-small); height: var(--ui-icon-small); }
+@media (any-pointer: coarse) {
+  .identity-scope-help::after { content: ""; position: absolute; inset: calc((var(--ui-help-control) - var(--size-touch-target)) / 2); }
+}
+.identity-scope > label { display: flex; align-items: center; gap: var(--space-2); min-height: var(--ui-control); color: var(--ui-ink); font-size: var(--ui-font-label); cursor: pointer; }
+.workbench-settings input[type=checkbox] { appearance: none; -webkit-appearance: none; display: inline-grid; place-content: center; flex: none; box-sizing: border-box; width: var(--ui-checkbox-size); height: var(--ui-checkbox-size); min-height: 0; margin: 0; padding: 0; border: 1px solid var(--ui-muted); border-radius: var(--ui-checkbox-radius); background: var(--ui-surface); color: var(--ui-on-accent); box-shadow: none; cursor: pointer; }
+.workbench-settings input[type=checkbox]::before { content: ""; width: var(--ui-checkbox-size); height: var(--ui-checkbox-size); background: currentColor; clip-path: polygon(18% 46%, 28% 36%, 43% 51%, 72% 22%, 82% 32%, 43% 71%); opacity: 0; }
+.workbench-settings input[type=checkbox]:checked { border-color: var(--ui-accent); background: var(--ui-accent); }
+.workbench-settings input[type=checkbox]:checked::before { opacity: 1; }
+.workbench-settings input[type=checkbox]:focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: var(--space-1); }
+.workbench-settings input[type=checkbox]:disabled { cursor: default; opacity: .5; }
+.identity-help { margin: 0; color: var(--ui-muted); font-size: var(--ui-font-sm); line-height: var(--line-control); }
+.identity-profile { display: flex; align-items: center; gap: var(--space-3); }
+.workbench-settings button.identity-avatar-button { border: 0; border-radius: var(--ui-radius-pill); background: var(--ui-field-background); color: var(--ui-muted); font-size: var(--ui-font-label); font-weight: var(--ui-weight-medium); }
+.identity-profile > .message__avatar { width: var(--ui-avatar-size); height: var(--ui-avatar-size); flex-basis: var(--ui-avatar-size); border: 0; border-radius: var(--ui-radius-pill); background: var(--ui-accent-soft); font-size: var(--ui-font-title); font-weight: var(--ui-weight-strong); }
+.identity-profile .model-brand-icon { width: var(--space-6); height: var(--space-6); }
+.identity-avatar-note { display: flex; align-items: center; gap: var(--space-2); margin-top: calc(-1 * var(--space-4)); }
+.identity-avatar-note small { flex: 1; }
+.workbench-settings .identity-avatar-note button { border-color: transparent; background: transparent; color: var(--ui-muted); }
+.identity-model-fields,
+.identity-more-fields { display: grid; gap: var(--space-4); }
+.identity-property-rows { display: grid; gap: var(--space-2); }
+.workbench-settings .editor-field.identity-value-row { grid-template-columns: max-content minmax(0, 1fr); align-items: center; gap: var(--space-4); min-height: var(--ui-field); }
+.identity-value-row > .select-field { justify-self: end; min-width: 0; max-width: 100%; }
+.identity-custom-model { display: grid; gap: var(--space-2); padding-left: var(--space-3); border-left: 2px solid var(--ui-accent-soft); }
+.identity-more { border: 0; }
+/* One row: the name on the left; any summary and the arrow on the right. */
+.workbench-settings button.identity-more-toggle { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); width: 100%; min-height: var(--ui-control); padding: var(--space-2) 0; border: 0; border-radius: var(--radius-xs); background: transparent; text-align: left; }
+.workbench-settings button.identity-more-toggle:hover:not(:disabled) { background: transparent; color: var(--ui-accent); }
+.identity-more-toggle > span { flex: none; font-weight: var(--ui-weight-strong); }
+.identity-more-toggle > small { flex: 1; min-width: 0; overflow: hidden; font-weight: 400; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
+.identity-more-toggle > .app-icon { flex: none; }
+.identity-more-toggle[aria-expanded=true] .app-icon { transform: rotate(90deg); }
+.workbench-settings .identity-more-fields { gap: var(--space-2); padding: var(--space-2) 0 var(--space-4); }
+.identity-more-fields > .editor-field, .identity-more-fields .identity-custom-model { margin-block: var(--space-2); }
+.identity-more-fields .identity-message-properties { margin-top: var(--space-3); }
+.identity-message-properties { display: grid; gap: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--ui-line); }
+
+/* -------------------------------------------------------------- Dialogs */
+.workbench-settings.workbench-transfer { top: 50%; left: 50%; translate: -50% -50%; max-height: calc(100dvh - var(--space-6)); }
+.workbench-transfer__list { display: grid; gap: var(--space-1); padding: var(--space-2) var(--space-3) var(--space-3); }
+.workbench-settings .workbench-transfer__list > button { display: flex; justify-content: flex-start; align-items: start; gap: var(--space-3); min-height: var(--size-touch-target); padding: var(--space-3); border: 0; border-radius: var(--ui-radius-md); text-align: left; white-space: normal; }
+.workbench-transfer__index { flex: none; min-width: var(--space-5); color: var(--ui-faint); font-variant-numeric: tabular-nums; }
+.workbench-transfer__text { display: grid; gap: var(--space-1); min-width: 0; }
+.workbench-transfer__text strong { font-weight: var(--ui-weight-strong); }
+.workbench-transfer__text > span { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; color: var(--ui-muted); font-size: var(--ui-font-sm); }
+body:has(.workbench) :is(.import-dialog, .export-dialog, .about-dialog, .inline-math-popover) { border-color: var(--ui-line); box-shadow: var(--ui-shadow-surface); }
+body:has(.workbench) .export-dialog { width: min(var(--ui-panel-width), 100%); border-radius: var(--ui-radius-xl); background: var(--ui-surface); }
+body:has(.workbench) .export-dialog > header { padding: var(--space-4) var(--space-4) var(--space-3) var(--space-5); border-bottom: 0; background: transparent; }
+body:has(.workbench) .export-dialog > header > button { width: var(--ui-control); min-width: var(--ui-control); height: var(--ui-control); min-height: var(--ui-control); border: 0; border-radius: var(--ui-radius-sm); background: transparent; font-size: var(--font-lg); }
+body:has(.workbench) .export-dialog > header > button:hover { background: var(--ui-surface-hover); }
+body:has(.workbench) :is(.export-dialog > header h2, .import-dialog h2, .about-dialog__header h2) { margin: 0; font-size: var(--ui-font-title); font-weight: var(--ui-weight-strong); line-height: var(--line-dialog-title); letter-spacing: normal; }
+body:has(.workbench) .about-dialog__header { align-items: center; }
+body:has(.workbench) .about-dialog__header button { min-width: 0; min-height: var(--ui-control); padding: 0 var(--space-3); border-color: var(--ui-line); border-radius: var(--ui-radius-pill); font-size: var(--ui-font); font-weight: var(--ui-weight-medium); }
+body:has(.workbench) .about-dialog__tagline { color: var(--ui-muted); font-size: var(--ui-font); line-height: var(--line-control); }
+body:has(.workbench) :is(.about-dialog__footer, .about-dialog__footer a) { font-size: var(--ui-font-sm); font-weight: var(--ui-weight-medium); }
+body:has(.workbench) .export-dialog__body { grid-template-columns: minmax(0,1fr); gap: var(--space-5) var(--space-4); padding: var(--space-5); }
+body:has(.workbench) .export-dialog > footer { padding: var(--space-3) var(--space-5); border-top: 1px solid var(--ui-line); background: transparent; }
+body:has(.workbench) :is(.export-dialog, .import-dialog) > footer button,
+body:has(.workbench) .inline-math-popover button { min-height: var(--ui-control-lg); border-radius: var(--ui-radius-pill); font-size: var(--ui-font); font-weight: var(--ui-weight-medium); white-space: nowrap; }
+.export-dialog__summary { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--space-2); margin: 0; color: var(--ui-muted); font-size: var(--ui-font-sm); }
+.export-dialog__summary .app-icon { width: var(--ui-icon); height: var(--ui-icon); }
+/* The download button and the hint for a blocked download share a line, wrapping on a phone. */
+.export-dialog__download { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin-top: 3px; }
+.export-dialog__download .export-dialog__download-link { margin-top: 0; }
+
+body:has(.workbench) .export-dialog-backdrop { background: var(--ui-scrim); padding: var(--space-4); }
+.export-dialog__more { grid-column: 1 / -1; }
+body:has(.workbench) .export-dialog__primary { color: var(--ui-on-accent); border: 0; background: linear-gradient(var(--ui-accent-top),var(--ui-accent)) var(--ui-accent); box-shadow: var(--ui-shadow-primary); }
+body:has(.workbench) .export-dialog__primary:not(:disabled):hover { background: var(--ui-accent-hover); }
+.segmented-control { position: relative; isolation: isolate; display: grid; grid-template-columns: repeat(var(--segment-count), minmax(0, 1fr)); padding: var(--space-1); border-radius: var(--ui-radius-pill); background: var(--ui-surface-sunken); }
+.segmented-control__selection { position: absolute; z-index: -1; top: var(--space-1); bottom: var(--space-1); left: var(--space-1); width: calc((100% - 2 * var(--space-1)) / var(--segment-count)); border-radius: var(--ui-radius-pill); background: var(--ui-surface); box-shadow: var(--ui-shadow-selected); transform: translateX(calc(100% * var(--segment-index))); pointer-events: none; }
+body:has(.workbench) .segmented-control > button { flex: 1; min-width: 0; min-height: var(--ui-control); padding: 0 var(--space-2); border: 0; border-radius: var(--ui-radius-pill); background: transparent; color: var(--ui-muted); font: inherit; font-size: var(--ui-font-label); box-shadow: none; }
+body:has(.workbench) .segmented-control > button[aria-checked=true] { background: transparent; color: var(--ui-accent-ink); font-weight: var(--ui-weight-strong); box-shadow: none; }
+body:has(.workbench) .segmented-control > button:not(:disabled):is(:hover, :active) { background: transparent; transform: none; }
+@media (prefers-reduced-motion: no-preference) { .segmented-control__selection { transition: transform var(--ui-motion-enter) var(--ui-motion-ease); } }
+
+/* ------------------------------------------------------------ Line breaks */
+/* Short interface text breaks into even lines instead of leaving a few characters
+   alone on the last one. The canvas is excluded: editing must lay out like the export. */
+/* Short labels balance their lines. Alerts and statuses avoid a last line of a few characters.
+   Paragraphs fill their lines: WebKit's pretty evens out every line, which looks like an early break. */
+body:has(.workbench) :is(small, label, legend, summary, strong):not(.conversation-canvas *) { text-wrap: balance; }
+body:has(.workbench) :is([role=alert], [role=status]):not(.conversation-canvas *) { text-wrap: pretty; }
+/* Fields inside a label would inherit the balancing; typed text wraps normally. */
+body:has(.workbench) :is(input, textarea) { text-wrap: wrap; }
+/* Chinese can break between characters; punctuation stays with its sentence.
+   Long file names and paths may break only when they would otherwise overflow. */
+body:has(.workbench) :is(.workbench-notice > span, .about-dialog__tagline, .inline-notice, .workbench-feedback > span, .export-dialog__choice span, .project-error > span, .export-dialog__error span) { min-width: 0; word-break: normal; overflow-wrap: anywhere; line-break: strict; }
+
+body:has(.workbench) .project-error { width: min(var(--ui-notice-width), calc(100vw - var(--space-8))); max-height: calc(100dvh - var(--space-8)); overflow: auto; gap: var(--space-2); padding: var(--space-4); border-color: var(--ui-line); border-radius: var(--ui-radius-lg); background: var(--ui-surface); color: var(--ui-danger); box-shadow: var(--ui-shadow-surface); font-size: var(--ui-font); line-height: var(--line-control); }
+body:has(.workbench) .project-error > span { color: var(--ui-ink); font-size: inherit; }
+body:has(.workbench) .project-error > button { min-height: var(--ui-control); padding: var(--space-1) var(--space-3); border-color: var(--ui-line); border-radius: var(--ui-radius-pill); background: var(--ui-field-background); color: var(--ui-ink); font-size: var(--ui-font); }
+.error-details { min-width: 0; color: var(--ui-muted); font-size: var(--ui-font-sm); line-height: var(--line-control); }
+.error-details > summary { width: fit-content; min-height: var(--ui-control); align-content: center; cursor: pointer; }
+.error-details > summary:focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: var(--ui-focus-offset); border-radius: var(--ui-radius-sm); }
+.error-details > pre { margin: var(--space-1) 0 0; padding: var(--space-3); border-radius: var(--ui-radius-sm); background: var(--ui-surface-sunken); color: var(--ui-muted); font-family: var(--font-family-mono); font-size: inherit; line-height: inherit; white-space: pre-wrap; overflow-wrap: anywhere; word-break: normal; text-wrap: wrap; }
+
+/* --------------------------------------------------------------- Notice */
+/* Feedback floats at the bottom and never displaces the caret or document. */
+.workbench-notice {
+  position: fixed;
+  z-index: var(--ui-layer-notice);
+  left: 50%;
+  bottom: max(var(--space-5), env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  /* left: 50% would cap the shrink-to-fit width at half the viewport and wrap
+     even short notices on phones; size to the text instead. */
+  width: max-content;
+  max-width: min(var(--ui-notice-width), calc(100vw - var(--space-8)));
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
+  border-radius: var(--ui-radius-xl);
+  background: var(--ui-surface-sunken);
+  color: var(--ui-ink);
+  box-shadow: var(--ui-shadow-surface);
+  font-size: var(--ui-font);
+  line-height: var(--line-control);
+  transform: translateX(-50%);
+}
+.workbench-notice > .app-icon { width: var(--ui-icon); height: var(--ui-icon); flex: none; color: var(--ui-success); }
+.workbench-notice[data-tone=alert] > .app-icon { color: var(--ui-danger); }
+.workbench-notice > span { min-width: 0; overflow-wrap: anywhere; text-wrap: pretty; }
+.workbench .workbench-notice > button { width: var(--ui-control); min-width: var(--ui-control); height: var(--ui-control); padding: 0; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--ui-muted); }
+.workbench .workbench-notice > button:not(:disabled):hover { background: color-mix(in srgb, var(--ui-surface) 14%, transparent); color: var(--ui-surface); }
+/* Touch: a compact close button, so the pill does not end in a wide blank. */
+@media (any-pointer: coarse) {
+  .workbench .workbench-notice > button { position: relative; width: var(--ui-add-chip); min-width: var(--ui-add-chip); height: var(--ui-add-chip); min-height: var(--ui-add-chip); }
+  .workbench .workbench-notice > button::after { content: ""; position: absolute; inset: calc((var(--ui-add-chip) - var(--ui-control)) / 2); }
+}
+
+/* ----------------------------------------------------------- Scrollbars */
+/* Native scrollbars keep wheel, drag, keyboard and touch behavior. */
+html:has(.workbench),
+body:has(.workbench) :is(.workbench-settings__scroll, .workbench-settings textarea, .select-field__menu, .workbench-action-menu, .document-menu__panel, .export-dialog__body, .import-dialog, .inline-math-popover textarea, .message-date-popover) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ui-scroll-thumb) transparent;
+}
+/* Non-auto standard properties override WebKit parts. Choose one path, and
+   leave forced colors and touch-primary devices to the native fallback above. */
+@media (hover: hover) and (pointer: fine) and (forced-colors: none) {
+  @supports selector(::-webkit-scrollbar) {
+    html:has(.workbench),
+    body:has(.workbench) :is(.workbench-settings__scroll, .workbench-settings textarea, .select-field__menu, .workbench-action-menu, .document-menu__panel, .export-dialog__body, .import-dialog, .inline-math-popover textarea, .message-date-popover) {
+      scrollbar-width: auto;
+      scrollbar-color: auto;
+    }
+    html:has(.workbench)::-webkit-scrollbar,
+    body:has(.workbench) :is(.workbench-settings__scroll, .workbench-settings textarea, .select-field__menu, .workbench-action-menu, .document-menu__panel, .export-dialog__body, .import-dialog, .inline-math-popover textarea, .message-date-popover)::-webkit-scrollbar {
+      width: var(--ui-scroll-width);
+      height: var(--ui-scroll-width);
+      background: transparent;
+    }
+    html:has(.workbench)::-webkit-scrollbar-thumb,
+    body:has(.workbench) :is(.workbench-settings__scroll, .workbench-settings textarea, .select-field__menu, .workbench-action-menu, .document-menu__panel, .export-dialog__body, .import-dialog, .inline-math-popover textarea, .message-date-popover)::-webkit-scrollbar-thumb {
+      min-height: var(--space-8);
+      border: var(--ui-scroll-inset) solid transparent;
+      border-radius: var(--radius-pill);
+      background: var(--ui-scroll-thumb);
+      background-clip: padding-box;
+    }
+    html:has(.workbench)::-webkit-scrollbar-thumb:hover,
+    html:has(.workbench)::-webkit-scrollbar-thumb:active,
+    body:has(.workbench) :is(.workbench-settings__scroll, .workbench-settings textarea, .select-field__menu, .workbench-action-menu, .document-menu__panel, .export-dialog__body, .import-dialog, .inline-math-popover textarea, .message-date-popover)::-webkit-scrollbar-thumb:hover,
+    body:has(.workbench) :is(.workbench-settings__scroll, .workbench-settings textarea, .select-field__menu, .workbench-action-menu, .document-menu__panel, .export-dialog__body, .import-dialog, .inline-math-popover textarea, .message-date-popover)::-webkit-scrollbar-thumb:active {
+      border-width: var(--ui-scroll-inset-active);
+      background-color: var(--ui-scroll-thumb-hover);
+    }
+    html:has(.workbench)::-webkit-scrollbar-track,
+    body:has(.workbench) :is(.workbench-settings__scroll, .workbench-settings textarea, .select-field__menu, .workbench-action-menu, .document-menu__panel, .export-dialog__body, .import-dialog, .inline-math-popover textarea, .message-date-popover)::-webkit-scrollbar-track {
+      margin-block: var(--space-2);
+      background: transparent;
+    }
+    html:has(.workbench)::-webkit-scrollbar-corner,
+    body:has(.workbench) :is(.workbench-settings__scroll, .workbench-settings textarea, .select-field__menu, .workbench-action-menu, .document-menu__panel, .export-dialog__body, .import-dialog, .inline-math-popover textarea, .message-date-popover)::-webkit-scrollbar-corner { background: transparent; }
+  }
+}
+
+/* ----------------------------------------------------------- Responsive */
+@media (max-width: 600px) {
+  .workbench-feedback { flex-direction: column; align-items: stretch; padding: var(--space-3); }
+  .workbench-feedback > button { align-self: flex-start; }
+  :root[data-keyboard-open] .workbench-chrome { top: calc(var(--ui-viewport-top, 0px) + var(--space-3)); }
+  .workbench .inline-app-header { gap: var(--space-1); padding-left: var(--space-3); padding-right: var(--ui-space-small); }
+  .workbench .inline-save-status { display: none; }
+  .workbench .inline-save-status[data-state=error] { display: inline-flex; font-size: var(--ui-font-sm); }
+  .workbench .inline-app-actions { gap: var(--ui-space-tight); }
+  .workbench .export-control__button { padding-inline: var(--space-3); font-size: var(--ui-font-label); }
+  .workbench .inline-toolbar { gap: 0; padding: var(--ui-space-tight) var(--space-1); }
+  .workbench .inline-toolbar-host { order: initial; flex: 0 1 auto; padding: 0; margin: 0; border: 0; }
+  .workbench .inline-format-tools { gap: 0; }
+  .workbench .inline-history-tools { gap: 0; padding-left: var(--space-1); margin-left: var(--space-1); }
+  .workbench .inline-format-tools .inline-format-wide { display: none; }
+  .workbench .inline-canvas-stage { padding: 0; }
+  :root[data-keyboard-open] .workbench .inline-app-header { display: none; }
+  :root[data-keyboard-open] .workbench .inline-toolbar { margin-top: 0; }
+  :root[data-keyboard-open] .workbench-notice { top: calc(var(--ui-viewport-top, 0px) + var(--ui-edit-bar, 0px) + var(--space-6)); bottom: auto; }
+  .workbench-feedback { margin-inline: var(--space-3); }
+  .workbench-settings { left: var(--space-3) !important; right: var(--space-3) !important; top: auto !important; bottom: max(var(--space-3), env(safe-area-inset-bottom)); width: auto; max-height: calc(100dvh - var(--space-10)) !important; border: 0; border-radius: var(--ui-radius-xl); }
+  :root[data-keyboard-open] .workbench-settings { bottom: calc(var(--ui-keyboard-inset, 0px) + var(--space-3)); max-height: calc(100dvh - var(--ui-keyboard-inset, 0px) - var(--ui-viewport-top, 0px) - var(--space-10)) !important; }
+  .workbench-settings.workbench-transfer { translate: none; }
+  .workbench-settings:has(.workbench-identity-fields) { width: auto; }
+  .workbench-identity-fields > footer, .workbench-settings form > footer { padding-bottom: max(var(--space-3), env(safe-area-inset-bottom)); }
+  body:has(.workbench) .export-dialog-backdrop { align-items: end; padding: var(--space-3); }
+  body:has(.workbench) .export-dialog { width: 100%; max-height: calc(100dvh - var(--space-10)); }
+  body:has(.workbench) .export-dialog > footer { padding-bottom: max(var(--space-3), env(safe-area-inset-bottom)); }
+}
+@media (max-width: 360px) {
+  .workbench .inline-format-tools .inline-format-italic { display: none; }
+  :root:lang(en) .workbench .document-menu__trigger--brand strong { display: none; }
+}
+
+/* --------------------------------------------------------------- Motion */
+/* Short, purposeful feedback for chrome only. Canonical content never animates. */
+@media (prefers-reduced-motion: no-preference) {
+  .workbench :is(.inline-app-header, .inline-toolbar, .workbench-add-message, .workbench-item-tools) button,
+  .workbench :is(.workbench-add-trigger, .workbench-header-edit > span),
+  body:has(.workbench) :is(.workbench-settings, .export-dialog, .import-dialog) :is(button, input, textarea),
+  body:has(.workbench) :is(.select-field__option, .document-menu__panel :is(button, a), .workbench-action-menu button) {
+    transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), border-color var(--ui-motion-fast) var(--ui-motion-ease), color var(--ui-motion-fast) var(--ui-motion-ease), box-shadow var(--ui-motion-fast) var(--ui-motion-ease), opacity var(--ui-motion-fast) var(--ui-motion-ease);
+  }
+  .workbench .workbench-item-tools { transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+  .workbench-settings,
+  body:has(.workbench) :is(.select-field__menu, .document-menu__panel:not([hidden]), .workbench-action-menu, .export-dialog, .import-dialog, .inline-math-popover, .message-date-popover) { animation: ui-surface-enter var(--ui-motion-enter) var(--ui-motion-ease); }
+  .workbench-notice { animation: ui-notice-enter var(--ui-motion-enter) var(--ui-motion-ease); }
+  .workbench-more-fields > summary .app-icon,
+  .workbench-settings .identity-more-toggle > .app-icon { transition: transform var(--ui-motion-fast) var(--ui-motion-ease); }
+}
+@keyframes ui-surface-enter {
+  from { opacity: 0; transform: translateY(var(--ui-motion-distance)) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ui-notice-enter {
+  from { opacity: 0; transform: translate(-50%, var(--space-2)); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(.workbench) .select-field__chevron,
+  body:has(.workbench) .export-dialog__spinner { animation: none; transition: none; }
+}
+
+/* --------------------------------------------------------- High contrast */
+/* Pointer selection uses the control surface; keyboard focus stays neutral and inside. */
+.workbench button:focus-visible,
+body:has(.workbench) :is(.workbench-settings, .export-dialog, .import-dialog, .about-dialog, .inline-math-popover) :is(button, a, summary):focus-visible {
+  outline: var(--ui-focus-width) solid var(--ui-focus-color);
+  outline-offset: var(--ui-focus-offset);
+}
+@media (forced-colors: active) {
+  :root { --ui-focus-color: Highlight; --ui-field-focus-border: Highlight; }
+  .workbench-settings input[type=checkbox] { forced-color-adjust: none; border-color: ButtonText; background: Canvas; color: HighlightText; }
+  .workbench-settings input[type=checkbox]:checked { border-color: Highlight; background: Highlight; }
+  .workbench-settings input[type=checkbox]:focus-visible { outline-color: Highlight; }
+  html:has(.workbench),
+  body:has(.workbench) :is(.workbench-settings__scroll, .workbench-settings textarea, .select-field__menu, .workbench-action-menu, .document-menu__panel, .export-dialog__body, .import-dialog, .inline-math-popover textarea, .message-date-popover) {
+    scrollbar-color: auto;
+    scrollbar-width: auto;
+  }
+  .workbench-settings :is(input:not([type=checkbox]), textarea, .select-field__trigger):focus-visible,
+  .workbench .inline-code-language input:focus-visible,
+  .workbench .inline-format-tools .select-field__trigger:focus-visible,
+  body:has(.workbench) :is(.export-dialog, .inline-math-popover) :is(input:not([type=checkbox]), textarea, .select-field__trigger):focus-visible { outline: var(--ui-focus-width) solid Highlight; outline-offset: var(--ui-focus-offset); }
+  .workbench .message__header[role=button]:focus-visible .message__avatar { outline-color: Highlight; }
+  .workbench .workbench-title:focus-visible, .workbench .workbench-title-input:focus-visible { outline: var(--ui-focus-width) solid Highlight; outline-offset: var(--ui-focus-offset); box-shadow: none; }
+  .workbench-more-fields > summary:focus-visible,
+  .workbench-settings button.identity-more-toggle:focus-visible,
+  .workbench .inline-prose:focus-visible { outline: var(--ui-focus-width) solid Highlight; outline-offset: var(--ui-focus-offset); }
+  .workbench :is(.workbench-item-tools, .workbench-add-trigger, .workbench-header-edit > span) { border-color: CanvasText; }
+  .workbench :is(.message, .workbench-block)[data-drop-edge]::before,
+  .workbench :is(.message, .workbench-block)[data-drop-edge]::after { background: Highlight; }
+}
+
+/* Decorative paths can be replaced on focus; clicks belong to the containing control. */
+.app-icon { pointer-events: none; }
+.app-icon * { vector-effect: non-scaling-stroke; }
+@media (prefers-reduced-motion: no-preference) {
+  .workbench :is(.inline-app-header, .inline-toolbar, .workbench-add-message) button:not([aria-haspopup], [role=radio]),
+  body:has(.workbench) :is(.workbench-settings, .export-dialog) button:not([aria-haspopup], [role=radio]) { transition: transform var(--ui-motion-control) var(--ui-spring-control), background-color var(--ui-motion-fast), box-shadow var(--ui-motion-fast); }
+  .workbench :is(.inline-app-header, .inline-toolbar, .workbench-add-message) button:not([aria-haspopup], [role=radio]):not(:disabled):active,
+  body:has(.workbench) :is(.workbench-settings, .export-dialog) button:not([aria-haspopup], [role=radio]):not(:disabled):active { transform: scale(var(--ui-press-scale)); transition-duration: var(--ui-motion-press); }
+}
+
+/* ---------------------------------------------------- Message navigation */
+.message-navigator { position: fixed; z-index: var(--ui-nav-layer); left: var(--space-3); top: var(--ui-nav-viewport-inset); bottom: var(--ui-nav-viewport-inset); display: flex; align-items: center; }
+.message-navigator__rail { position: relative; width: var(--ui-nav-rail-width); max-height: calc(100dvh - 2 * var(--ui-nav-viewport-inset)); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--ui-line-strong) transparent; }
+.workbench .message-navigator__rail > button { display: flex; width: 100%; height: var(--ui-nav-row-height); min-height: var(--ui-nav-row-height); padding: 0; border: 0; border-radius: var(--ui-radius-sm); }
+.message-navigator__rail > button > span { display: block; width: var(--ui-nav-line-width); height: var(--ui-nav-line-height); border-radius: var(--ui-radius-pill); background: var(--ui-line-strong); }
+.message-navigator__rail > button[aria-current] > span { width: var(--ui-nav-active-width); background: var(--ui-ink); }
+.message-navigator__rail > button:not([aria-current]):has(+ button:not(:disabled):is(:hover, :focus-visible)) > span,
+.message-navigator__rail > button:not(:disabled):is(:hover, :focus-visible) + button:not([aria-current]) > span { width: var(--ui-nav-near-width); }
+.message-navigator__rail > button:not(:disabled):is(:hover, :focus-visible) > span { width: var(--ui-nav-hover-width); transform: translateX(var(--ui-space-tight)); background: var(--ui-ink); }
+.message-navigator__preview { position: fixed; left: calc(var(--space-3) + var(--ui-nav-rail-width)); width: var(--ui-nav-preview-width); padding: var(--space-4); border-radius: var(--ui-radius-lg); background: var(--ui-surface); box-shadow: var(--ui-shadow-float); pointer-events: auto; }
+.message-navigator__preview > div { display: flex; align-items: baseline; gap: var(--space-2); }
+.message-navigator__preview strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ui-font); font-weight: var(--ui-weight-strong); }
+.message-navigator__preview div > span { flex: none; margin-left: auto; color: var(--ui-muted); font-size: var(--ui-font-sm); }
+.message-navigator__preview p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; margin: var(--space-2) 0 0; color: var(--ui-muted); font-size: var(--ui-font); line-height: var(--line-control); }
+.workbench .message-navigator-trigger { display: none; position: fixed; z-index: var(--ui-nav-layer); left: var(--space-4); bottom: max(var(--space-5), env(safe-area-inset-bottom)); width: var(--size-touch-target); height: var(--size-touch-target); padding: 0; background: var(--ui-surface); box-shadow: var(--ui-shadow-float); }
+.message-directory-backdrop { position: fixed; inset: 0; z-index: var(--ui-layer-panel); display: flex; align-items: end; justify-content: flex-start; padding: var(--space-3); background: var(--ui-scrim); }
+.message-directory { display: flex; flex-direction: column; width: min(var(--ui-panel-width), 100%); max-height: calc(100dvh - 2 * var(--space-6)); padding: var(--space-3); border-radius: var(--ui-radius-xl); background: var(--ui-surface); box-shadow: var(--ui-shadow-float); color: var(--ui-ink); }
+.message-directory header { display: flex; align-items: center; justify-content: space-between; padding-left: var(--space-2); }
+.message-directory h2 { margin: 0; font-size: var(--ui-font-title); font-weight: var(--ui-weight-strong); }
+.message-directory h2 span { margin-left: var(--space-2); color: var(--ui-muted); font-size: var(--ui-font-sm); }
+.message-directory button { display: flex; align-items: center; gap: var(--space-3); min-height: var(--size-touch-target); padding: var(--space-3) var(--space-2); border: 0; border-radius: var(--ui-radius-md); background: transparent; color: inherit; font: inherit; font-size: var(--ui-font); text-align: left; cursor: pointer; }
+.message-directory header button { justify-content: center; width: var(--size-touch-target); padding: 0; }
+.message-directory .app-icon { width: var(--ui-icon); height: var(--ui-icon); }
+.message-directory nav { overflow: auto; overscroll-behavior: contain; padding-block: var(--space-2); }
+.message-directory nav > button { width: 100%; }
+.message-directory button:is(:hover, [aria-current]) { background: var(--ui-surface-hover); }
+.message-directory button:focus-visible { outline: var(--ui-focus-width) solid var(--ui-focus-color); outline-offset: var(--ui-focus-offset); }
+.message-directory__number { flex: none; width: var(--space-5); text-align: center; color: var(--ui-muted); font-variant-numeric: tabular-nums; }
+.message-directory [aria-current] .message-directory__number { color: var(--ui-accent-ink); font-weight: var(--ui-weight-strong); }
+.message-directory__text { display: grid; gap: var(--space-1); min-width: 0; }
+.message-directory__text > span:first-child { display: flex; align-items: baseline; gap: var(--space-2); }
+.message-directory__text strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--ui-weight-strong); }
+.message-directory__text small { flex: none; color: var(--ui-muted); font-size: var(--ui-font-sm); }
+.message-directory__summary { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ui-muted); }
+@media (max-width: 900px), (max-height: 360px), (any-pointer: coarse) {
+  .message-navigator { display: none !important; }
+  .workbench .message-navigator-trigger { display: inline-flex; }
+  :root[data-keyboard-open] .workbench .message-navigator-trigger { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .message-navigator__rail > button > span { transition: width var(--ui-motion-control) var(--ui-spring-control), transform var(--ui-motion-control) var(--ui-spring-control), background-color var(--ui-motion-fast); }
+  .message-navigator__preview { animation: ui-surface-enter var(--ui-motion-enter) var(--ui-motion-ease); transition: top var(--ui-motion-fast) var(--ui-motion-ease); }
+}
+@media (forced-colors: active) {
+  .message-navigator__rail > button > span { background: CanvasText; }
+  .message-navigator__rail > button[aria-current] > span { background: Highlight; }
+  .segmented-control__selection, .message-directory [aria-current] { outline: var(--ui-focus-width) solid Highlight; }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .workbench .inline-toolbar button > .app-icon { transition: transform var(--ui-motion-fast) var(--ui-motion-ease); }
+  .workbench .inline-toolbar button:not(:disabled):is(:hover, :focus-visible) > .app-icon { transform: translateY(calc(-1 * var(--ui-toolbar-hover-lift))) scale(var(--ui-toolbar-hover-scale)); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .inline-italic-caret:not([hidden]) { animation: ui-caret-blink var(--ui-caret-blink) step-end infinite; }
+}

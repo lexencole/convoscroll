@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="420" viewBox="0 0 800 420" role="img" aria-labelledby="title desc">
+  <title id="title">海平面与视线的切线示意</title>
+  <desc id="desc">观察点、地心和地平线构成直角三角形。眼睛高度为 h，地球半径为 R，到地平线的直线距离为 d。图中高度被放大，不按实际比例。</desc>
+  <defs>
+    <style>
+      :root { --paper: #fbfaf6; --sea: #e4ede8; --ink: #263a32; --muted: #59685f; --accent: #3f6b54; }
+      text { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; fill: var(--ink); }
+      .label { font-size: 22px; }
+      .note { font-size: 18px; fill: var(--muted); }
+      .line { fill: none; stroke: var(--accent); stroke-width: 3; }
+    </style>
+  </defs>
+  <rect width="800" height="420" rx="20" fill="var(--paper, #fbfaf6)"/>
+  <!-- Exact 3:4:5 triangle: sight 180, radius 240, eye-to-center 300. -->
+  <path id="sea-fill" d="M130 120 A240 240 0 0 1 370 360 L130 360Z" fill="#e4ede8"/>
+  <path id="sea-surface" d="M130 120 A240 240 0 0 1 370 360" class="line"/>
+  <path id="sight-triangle" d="M130 60L130 360L274 168Z" class="line"/>
+  <path d="M108 60H118M113 60V120M108 120H118" class="line"/>
+  <path id="right-angle" d="M259.6 157.2L248.8 171.6L263.2 182.4" class="line"/>
+  <circle id="eye" cx="130" cy="60" r="5" fill="#263a32"/>
+  <circle id="horizon" cx="274" cy="168" r="5" fill="#263a32"/>
+  <circle id="earth-center" cx="130" cy="360" r="5" fill="#263a32"/>
+  <text x="148" y="60" class="label">眼睛</text>
+  <text x="78" y="96" class="label">h</text>
+  <text x="240" y="110" class="label">d · 视线</text>
+  <text x="218" y="285" class="label">R</text>
+  <text x="83" y="390" class="label">地心</text>
+  <text x="292" y="169" class="label">地平线</text>
+  <text x="486" y="80" font-size="24" font-weight="600">站在岸边，能看多远？</text>
+  <text x="486" y="131" class="label">眼睛离海面 1.7 m</text>
+  <text x="486" y="177" class="label">视线约在 4.65 km 处相切</text>
+  <text x="486" y="253" class="note">海面在脚下弯下去，</text>
+  <text x="486" y="282" class="note">视线继续向前。</text>
+  <text x="486" y="348" class="note">示意不按比例 · 忽略大气折射</text>
+</svg>

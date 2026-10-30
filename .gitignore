@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-cli/
+build/
+coverage/
+playwright-report/
+test-results/
+.playwright-cli/
+
+# Local screenshots, exports and comparison output
+output/
+
+# Local tooling and caches
+.claude/launch.json
+.vite/
+.turbo/
+.cache/
+*.tsbuildinfo
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+.wrangler/
+
+# OS and editor files
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary exports
+exports/
+tmp/

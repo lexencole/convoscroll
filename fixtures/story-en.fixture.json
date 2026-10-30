@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture-story-en-v2",
+  "metadata": {
+    "title": "Slow Resurrection: A Feasibility Study",
+    "subtitle": "If staying up late is slowly killing me, what does sleeping all day do?",
+    "locale": "en",
+    "createdAt": "2026-09-19T10:00:00Z",
+    "updatedAt": "2026-10-02T10:00:00Z"
+  },
+  "canvas": {
+    "preset": "portrait",
+    "width": 480,
+    "scale": 3
+  },
+  "theme": {
+    "id": "warm-editorial-v1"
+  },
+  "messages": [
+    {
+      "id": "msg-story-001",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-story-001",
+          "type": "markdown",
+          "source": "If staying up late is slowly killing me, does sleeping all day slowly bring me back to life?"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-002",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-story-review-note",
+          "type": "reasoning",
+          "title": "Checking the symmetry",
+          "summary": "Opposites in wording, but both move sleep out of the night.",
+          "source": "Staying up late and sleeping during the day sound like opposites, but both place sleep outside the night. First identify where the analogy breaks, then check the actual schedule.",
+          "status": "success",
+          "displayState": "collapsed",
+          "exportState": "current"
+        },
+        {
+          "id": "block-story-002",
+          "type": "markdown",
+          "source": "## Preliminary review of “slow resurrection”\n\nThe verdict: **perfect symmetry in grammar; rejected by physiology.**\n\nYour reasoning seems to be:\n\n1. Staying up late = not sleeping at night = slowly killing yourself\n2. Sleeping during the day = the opposite of staying up late = ~~slow resurrection~~\n3. Therefore…\n\nStep 2 is where it breaks. Sleeping during the day is usually the second half of staying up all night. They’re two parts of the same episode.\n\n- Staying up late: missing the sleep you were supposed to get at night\n- Sleeping during the day: moving that sleep into daylight hours\n  - You can move the hours\n  - You can’t move your body clock, or *circadian rhythm*, with them"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-003",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-story-003",
+          "type": "markdown",
+          "source": "But I’m not short on sleep. I get 7 to 8 hours every day.\n\nI just go to bed at three or four and get up around noon. Does that still count? Here’s last week’s log."
+        },
+        {
+          "id": "block-story-sleep-file",
+          "type": "file",
+          "assetId": "asset-story-sleep-log",
+          "label": "Last week’s sleep log"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-004",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-story-sleep-call",
+          "type": "toolCall",
+          "callId": "call-story-sleep",
+          "toolName": "sleep_summary",
+          "summary": "Calculate average sleep duration and midpoint.",
+          "input": {
+            "file": "sleep-week.csv",
+            "reference": "23:00-07:00"
+          },
+          "status": "success",
+          "displayState": "collapsed",
+          "exportState": "current"
+        },
+        {
+          "id": "block-story-sleep-result",
+          "type": "toolResult",
+          "callId": "call-story-sleep",
+          "summary": "Average: 7.7 hours. Sleep midpoint: 07:30.",
+          "output": {
+            "averageHours": 7.7,
+            "averageMidpoint": "07:30",
+            "referenceMidpoint": "03:00",
+            "shiftHours": 4.5
+          },
+          "status": "success",
+          "displayState": "collapsed",
+          "exportState": "current"
+        },
+        {
+          "id": "block-story-004",
+          "type": "markdown",
+          "source": "## Passing on duration, failing on timing\n\nI’ve checked the log. You average **7.7 hours** a night. You’re getting the hours; the whole sleep window has just shifted later.\n\n| Measure | Conventional schedule | Your schedule |\n| :-- | :--: | --: |\n| Bedtime | 23:00 | 03:00–04:00 |\n| Wake-up | 07:00 | 11:00–12:00 |\n| Sleep midpoint | 03:00 | 07:30 |\n| Outside while you sleep | Dark | Light |\n\nSubtract the two midpoints:\n\n$$\n07{:}30 - 03{:}00 = 4.5\\,\\mathrm{h}\n$$\n\nYou’re in UTC+8. If your body clock is 4.5 hours behind, that gives $8 - 4.5 = 3.5$, or UTC+3:30. There’s one capital city in that time zone: Tehran."
+        },
+        {
+          "id": "block-story-sleep-image",
+          "type": "image",
+          "assetId": "asset-story-sleep-chart",
+          "alt": "Sleep windows for all seven days, shifted about 4.5 hours later than the reference schedule",
+          "caption": "Dashed outline: 23:00–07:00. Green bars: your sleep last week.",
+          "width": "full"
+        },
+        {
+          "id": "block-story-005",
+          "type": "markdown",
+          "source": "**You’re here. Your body clock is in Tehran.**"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-005",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-story-006",
+          "type": "markdown",
+          "source": "So every time I wake up, my body is actually in Tehran??\n\nCan I claim a travel allowance?"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-006",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-story-007",
+          "type": "markdown",
+          "source": "You can apply, but the approver is the sun, and it only recognizes local time.\n\n> A travel allowance requires you to be there. You only sent your body clock.\n\nHere’s the calculation in code, so you can check where your body is the next time your schedule drifts:\n\n```python\nTIMEZONES = {3.5: \"Tehran\", 4: \"Dubai\", 5: \"Tashkent\", 8: \"Local\"}\n\ndef body_location(hours_late: float, local: float = 8) -> str:\n    offset = local - hours_late\n    return TIMEZONES.get(offset, f\"UTC+{offset}\")\n\nprint(body_location(4.5))  # Tehran\n```\n\n---\n\nYour body clock can shift back by roughly one hour a day. Getting from Tehran back to local time would take at least `4.5` days."
+        }
+      ]
+    },
+    {
+      "id": "msg-story-007",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-story-008",
+          "type": "markdown",
+          "source": "Fine. Give me a proper resurrection plan. I’ll do it."
+        }
+      ]
+    },
+    {
+      "id": "msg-story-008",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-story-009",
+          "type": "markdown",
+          "source": "### A proper resurrection plan\n\n> Real resurrection is going to bed half an hour earlier tonight.\n\n- [ ] Go to bed 30 minutes earlier each night; back to 23:00 in nine days\n- [ ] Get 10 minutes of sunlight after waking up\n  - Cloudy days count; standing by a window is fine\n  - Skip the sunglasses: these 10 minutes are for your body clock\n- [ ] Keep naps under 30 minutes\n- [x] Admit that “slow resurrection” is a good title\n\nTurn on `Do Not Disturb` before bed."
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "id": "asset-story-sleep-log",
+      "kind": "file",
+      "fileName": "sleep-week.csv",
+      "mimeType": "text/csv",
+      "byteSize": 156,
+      "source": {
+        "kind": "fixture",
+        "path": "fixtures/assets/sleep-week-en.csv"
+      }
+    },
+    {
+      "id": "asset-story-sleep-chart",
+      "kind": "image",
+      "fileName": "sleep-shift-en.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 3603,
+      "width": 800,
+      "height": 460,
+      "source": {
+        "kind": "fixture",
+        "path": "fixtures/assets/sleep-shift-en.svg"
+      }
+    }
+  ]
+}

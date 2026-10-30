@@ -1,0 +1,401 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture-rich-v0",
+  "metadata": {
+    "title": "把剧透留在墙外",
+    "subtitle": "林岸和 AI 为第一次看《进击的巨人》的朋友准备一场只谈当下感受的无剧透观影夜。",
+    "locale": "zh-CN",
+    "createdAt": "2026-06-12T09:30:00Z",
+    "updatedAt": "2026-06-12T10:00:00Z"
+  },
+  "canvas": {
+    "preset": "portrait",
+    "width": 480,
+    "scale": 3
+  },
+  "theme": {
+    "id": "warm-editorial-v1"
+  },
+  "messages": [
+    {
+      "id": "msg-rich-001-system",
+      "role": "system",
+      "displayName": "观影助手",
+      "blocks": [
+        {
+          "id": "block-rich-001-system",
+          "type": "markdown",
+          "source": "你是一位谨慎的观影策划助手。请为朋友设计无剧透主题观影夜，明确区分已确认安排、暂定内容和读取失败的素材；不要透露超出观众当前进度的剧情。"
+        }
+      ]
+    },
+    {
+      "id": "msg-rich-002-developer",
+      "role": "developer",
+      "displayName": "无剧透约定",
+      "blocks": [
+        {
+          "id": "block-rich-002-developer",
+          "type": "markdown",
+          "source": "场景设定：小满第一次看《进击的巨人》，只知道‘高墙与巨人’的基础设定；当晚最多看 6 集，每两集休息 12 分钟，总预算不超过 500 元。所有视觉素材必须原创，不使用官方剧照、Logo 或台词。"
+        }
+      ]
+    },
+    {
+      "id": "msg-rich-003-user",
+      "role": "user",
+      "displayName": "林岸",
+      "avatarAssetId": "asset-rich-avatar",
+      "blocks": [
+        {
+          "id": "block-rich-003-markdown",
+          "type": "markdown",
+          "source": "# 把剧透留在墙外\n\n周六想请小满来家里看 Attack on Titan，也就是《进击的巨人》。她第一次看，只知道故事里有高墙和巨人；我不想让一群老粉的热情变成提前讲解。\n\n我最在意三件事：\n\n1. **不剧透**，只聊她已经看到的内容。\n2. 最多看 6 集，每两集休息 12 分钟；如果累了，4 集就收尾。\n3. 晚餐、零食和打印物料控制在 500 元以内。\n\n开场前的小清单：\n\n- [x] 画一张不含角色和标识的原创主题海报\n- [x] 写下小满已经知道的基础设定\n- [ ] 把容易越界的提问卡收进信封\n- [ ] 将最终安排发到观影群\n\n> 她说：‘别提前告诉我该喜欢谁，也别替我解释。’\n\n我想把这次观影夜做成一个小小的纪念页。请给我一份自然、不像活动流程表的安排；如果方便，也附一段能放进[无剧透观影页](#spoiler-free-watch-night)的 TypeScript 小代码。"
+        },
+        {
+          "id": "block-rich-004-image-medium",
+          "type": "image",
+          "assetId": "asset-rich-landscape",
+          "alt": "无人物、无官方标识的原创观影夜海报",
+          "caption": "我画的原创海报草稿，只用高墙、灯光和空椅子的抽象意象，不使用官方素材。",
+          "width": "medium"
+        },
+        {
+          "id": "block-rich-005-file",
+          "type": "file",
+          "assetId": "asset-rich-brief-file",
+          "label": "无剧透观影约定（虚构 PDF）"
+        }
+      ]
+    },
+    {
+      "id": "msg-rich-004-assistant-analysis",
+      "role": "assistant",
+      "displayName": "小卷",
+      "model": "ChatGPT",
+      "timestamp": "2026-06-12T09:42:00Z",
+      "status": "complete",
+      "blocks": [
+        {
+          "id": "block-rich-006-reasoning-collapsed",
+          "type": "reasoning",
+          "title": "先守住剧透边界",
+          "summary": "先按小满已经知道的内容划线，再安排集数、休息和讨论卡。",
+          "source": "先定义小满已经知道的范围，而不是从老粉最想聊的内容出发。每次讨论都只回看刚播完的片段；不解释伏笔，也不暗示某个角色以后是否重要。",
+          "status": "success",
+          "durationMs": 1840,
+          "displayState": "collapsed",
+          "exportState": "current"
+        },
+        {
+          "id": "block-rich-007-toolcall-success",
+          "type": "toolCall",
+          "callId": "call-rich-measure-001",
+          "toolName": "check_spoiler_boundary",
+          "summary": "核对提问卡是否超出首次观众的已知范围。",
+          "input": {
+            "viewerProgress": 0,
+            "knownConcepts": [
+              "高墙",
+              "巨人"
+            ],
+            "cards": [
+              "第一印象",
+              "角色命运猜想",
+              "此刻最想追问的事"
+            ]
+          },
+          "status": "success",
+          "durationMs": 320,
+          "displayState": "collapsed",
+          "exportState": "current"
+        },
+        {
+          "id": "block-rich-008-toolcall-pending",
+          "type": "toolCall",
+          "callId": "call-rich-preview-002",
+          "toolName": "check_watch_schedule",
+          "summary": "正在确认 6 集上限和两次休息能否在三小时内完成。",
+          "input": {
+            "episodeCount": 6,
+            "minutesPerEpisode": 24,
+            "breakMinutes": 12
+          },
+          "status": "pending",
+          "displayState": "collapsed",
+          "exportState": "collapsed"
+        },
+        {
+          "id": "block-rich-009-markdown-code",
+          "type": "markdown",
+          "source": "## 先定一个不替故事说话的版本\n\n我的建议是把‘老粉带新人补设定’改成‘一起留下三个当下’：\n\n- **开场只问期待**：不播放解析，也不解释海报里的任何意象。\n- **每两集停一次**：只聊刚刚看到的选择，不用后来发生的事证明谁对谁错。\n- **收尾写封存卡**：把猜想装进信封，等她自己看到答案后再拆。\n\n> 这场观影夜最重要的不是证明老粉懂得多，而是让第一次观看仍然属于她。\n\n你说想把计划贴进观影群的小网页，可以先用这段轻量代码：\n\n```ts\ntype WatchSegment = { startsAt: string; throughEpisode: number; spoilerSafe: boolean };\n\nexport function nextSpoilerSafeSegment(segments: WatchSegment[], completedEpisodes: number): WatchSegment | undefined {\n  return segments.find((segment) => segment.throughEpisode > completedEpisodes && segment.spoilerSafe);\n}\n\nconst messageForTheFriendWatchingAttackOnTitanForTheFirstTimeWithoutAnyAdvanceHints =\n  \"今晚不补设定，只把灯调暗。\";\n```\n\n想提前检查休息点，也可以用一个很短的 Python 脚本：\n\n```python\ndef needs_intermission(watched_episodes: int) -> bool:\n    return watched_episodes > 0 and watched_episodes % 2 == 0\n\nassert needs_intermission(4)\n```\n\n观影数据也可以保持得很简单：\n\n```json\n{\"title\": \"把剧透留在墙外\", \"episodes\": 6, \"spoilerFree\": true, \"offline\": true}\n```"
+        },
+        {
+          "id": "block-rich-010-markdown-math-table",
+          "type": "markdown",
+          "source": "## 时长、休息和预算\n\n先用一个很朴素的估算：整晚的时间 $T_{night}=T_{watch}+T_{break}+T_{note}$，它应该和正文自然对齐。\n\n如果看 6 集、每集约 24 分钟，中间休息两次各 12 分钟，最后用 12 分钟写封存卡：\n\n$$\nT_{watch}=6\\times24=144\\text{ min},\\qquad T_{night}=144+2\\times12+12=180\\text{ min}\n$$\n\n### 给观影群看的长预算式\n\n这条预算写在一句话里也不能跑出画布：$B_{night}=B_{dinner}+B_{snack}+B_{print}+B_{light}+B_{backup}$。\n\n纪念页的英文内部名故意留得很长，方便确认它仍然可读：\n\n$$\n\\mathrm{KeepEverySpoilerOutsideTheWallUntilTheStoryOpensItsOwnDoor}\n$$\n\n分项预算适合主动分行：\n\n$$\n\\begin{aligned}\nB_{dinner} &= 180 \\\\\nB_{snack} &= 120 \\\\\nB_{print} &= 40 \\\\\nB_{light} &= 0 \\\\\nB_{backup} &= 80 \\\\\nB_{night} &= 420\n\\end{aligned}\n$$\n\n每个讨论节点的剧透安全标记是一组很宽的数据，窄画布下也要有明确的保底：\n\n$$\n\\begin{bmatrix} s_1 & s_2 & s_3 & s_4 & s_5 & s_6 & s_7 & s_8 & s_9 \\\\ 1 & 1 & 1 & 0 & 1 & 1 & 0 & 1 & 1 \\end{bmatrix}\n$$\n\n| 时间 | 环节 | 集数 | 休息 | 可以聊 | 暂时不聊 | 准备物 |\n| --- | --- | ---: | ---: | --- | --- | --- |\n| 18:30 | 晚餐与入场 | — | 自由 | 为什么想看 | 角色走向 | 原创海报、信封 |\n| 19:00 | 第一段 | 1–2 | 12 分钟 | 第一印象 | 后续设定 | 水、无声零食 |\n| 20:00 | 第二段 | 3–4 | 12 分钟 | 当下的选择 | 老粉梗与解析 | 便签、暖灯 |\n| 21:00 | 第三段 | 5–6 | 收尾 12 分钟 | 刚看完的感受 | 封存卡里的猜想 | 封存卡、笔 |"
+        }
+      ]
+    },
+    {
+      "id": "msg-rich-005-tool-success",
+      "role": "tool",
+      "displayName": "check_spoiler_boundary",
+      "blocks": [
+        {
+          "id": "block-rich-011-toolresult-success",
+          "type": "toolResult",
+          "callId": "call-rich-measure-001",
+          "summary": "发现一张提问卡越过已知范围，已换成只记录当下感受的版本。",
+          "output": {
+            "spoilerSafe": true,
+            "allowedTopics": [
+              "第一印象",
+              "已经出现的选择"
+            ],
+            "changedCard": "角色命运猜想 → 当下感受封存卡",
+            "warnings": [
+              "不要解释尚未出现的设定"
+            ]
+          },
+          "status": "success",
+          "durationMs": 320,
+          "displayState": "collapsed",
+          "exportState": "expanded"
+        }
+      ]
+    },
+    {
+      "id": "msg-rich-006-assistant-states",
+      "role": "assistant",
+      "displayName": "小卷",
+      "model": "ChatGPT",
+      "timestamp": "2026-06-12T09:48:00Z",
+      "status": "streaming",
+      "blocks": [
+        {
+          "id": "block-rich-012-reasoning-expanded",
+          "type": "reasoning",
+          "title": "核对六集的节奏",
+          "summary": "剧透边界已经能用，结束时间仍在计算。",
+          "source": "先保留 6 集上限和 4 集早停两个版本。如果小满在第二次休息时已经累了，就直接写封存卡，不把看完计划当成任务。",
+          "status": "running",
+          "durationMs": 760,
+          "displayState": "collapsed",
+          "exportState": "collapsed"
+        },
+        {
+          "id": "block-rich-013-reasoning-neutral",
+          "type": "reasoning",
+          "title": "一个小坚持",
+          "source": "不在门口挂角色图，也不播放解析视频。小满如果只想安静消化刚看完的内容，就让那十二分钟保持空白。",
+          "status": "neutral",
+          "displayState": "expanded",
+          "exportState": "expanded"
+        },
+        {
+          "id": "block-rich-022-reasoning-error",
+          "type": "reasoning",
+          "title": "房间灯光参考图没有读到",
+          "summary": "缺少的素材不会阻塞观影安排。",
+          "source": "未找到那张房间灯光参考图的本地文件；保留缺失提示，但不猜测图片内容，也不修改已经确认的无剧透安排。",
+          "status": "error",
+          "durationMs": 45,
+          "displayState": "collapsed",
+          "exportState": "current"
+        },
+        {
+          "id": "block-rich-014-toolcall-running",
+          "type": "toolCall",
+          "callId": "call-rich-fonts-003",
+          "toolName": "check_watch_schedule",
+          "summary": "正在比较 6 集上限和 4 集早停。",
+          "input": [
+            "6 集上限",
+            "每两集休息 12 分钟",
+            "4 集早停选项"
+          ],
+          "status": "running",
+          "durationMs": 760,
+          "displayState": "collapsed",
+          "exportState": "expanded"
+        },
+        {
+          "id": "block-rich-015-toolcall-error",
+          "type": "toolCall",
+          "callId": "call-rich-remote-004",
+          "toolName": "read_missing_reference",
+          "summary": "尝试读取房间灯光参考图。",
+          "input": {
+            "assetId": "asset-rich-missing-image"
+          },
+          "status": "error",
+          "durationMs": 45,
+          "displayState": "collapsed",
+          "exportState": "collapsed"
+        }
+      ]
+    },
+    {
+      "id": "msg-rich-007-tool-error",
+      "role": "tool",
+      "displayName": "read_missing_reference",
+      "timestamp": "2026-06-12T09:50:00Z",
+      "status": "error",
+      "blocks": [
+        {
+          "id": "block-rich-016-toolresult-error",
+          "type": "toolResult",
+          "callId": "call-rich-remote-004",
+          "summary": "房间灯光参考图未找到，现有观影安排没有被修改。",
+          "output": {
+            "code": "LOCAL_ASSET_NOT_FOUND",
+            "recoverable": true
+          },
+          "status": "error",
+          "durationMs": 45,
+          "displayState": "collapsed",
+          "exportState": "current"
+        }
+      ]
+    },
+    {
+      "id": "msg-rich-008-assistant-media",
+      "role": "user",
+      "displayName": "林岸",
+      "timestamp": "2026-06-12T09:55:00Z",
+      "status": "complete",
+      "blocks": [
+        {
+          "id": "block-rich-017-markdown-media",
+          "type": "markdown",
+          "source": "### 我又补了一点素材\n\n同一张原创海报，我想看看小图和通栏两种排法；房间灯光参考图似乎没有传成功。播放清单还导出了一段互动时间轴，如果暂时不能显示，保留原始数据就好。"
+        },
+        {
+          "id": "block-rich-018-image-small",
+          "type": "image",
+          "assetId": "asset-rich-landscape",
+          "alt": "小尺寸的原创无剧透观影夜海报",
+          "caption": "小图版本：像贴在客厅门边的一张入场卡。",
+          "width": "small"
+        },
+        {
+          "id": "block-rich-023-image-missing",
+          "type": "image",
+          "assetId": "asset-rich-missing-image",
+          "alt": "未能读取的房间灯光参考图",
+          "caption": "这张房间灯光参考图没有上传成功，稍后可以重新选择。",
+          "width": "medium"
+        },
+        {
+          "id": "block-rich-020-unsupported",
+          "type": "unsupported",
+          "originalType": "episodeTimeline",
+          "reason": "暂不支持播放清单导出的互动时间轴，原始负载已保留。",
+          "raw": {
+            "segments": [
+              "第 1–2 集",
+              "第 3–4 集",
+              "第 5–6 集"
+            ],
+            "durationMinutes": [
+              48,
+              48,
+              48
+            ],
+            "breakMinutes": 12,
+            "showSpoilerShield": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "msg-rich-009-unknown",
+      "role": "unknown",
+      "sourceRole": "friend",
+      "displayName": "朋友 · 小满",
+      "blocks": [
+        {
+          "id": "block-rich-021-unknown-role",
+          "type": "markdown",
+          "source": "我只知道有高墙和巨人。别在开始前给我补课，也别暗示谁更重要；零食我来带，最后那张封存卡留给我写。**让我自己走到故事想带我去的地方。**"
+        }
+      ]
+    },
+    {
+      "id": "msg-rich-010-assistant-final",
+      "role": "assistant",
+      "displayName": "小卷",
+      "model": "ChatGPT",
+      "timestamp": "2026-06-12T10:00:00Z",
+      "status": "complete",
+      "blocks": [
+        {
+          "id": "block-rich-024-assistant-final",
+          "type": "markdown",
+          "source": "那就这样定：**6 集是上限，4 集也可以收尾；能聊的只限小满已经看到的。**\n\n我先把原创海报排成通栏版本，门口再贴一句‘剧透留在墙外’。灯熄以后，所有解释都暂停，让故事自己抵达她。\n\n这是非官方粉丝主题安排，不使用官方剧照、标识或台词。"
+        },
+        {
+          "id": "block-rich-019-image-full",
+          "type": "image",
+          "assetId": "asset-rich-landscape",
+          "alt": "整理成通栏版本的原创无剧透观影夜海报",
+          "caption": "通栏版本：只用原创图形定下气氛，把答案留给故事。",
+          "width": "full"
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "id": "asset-rich-landscape",
+      "kind": "image",
+      "fileName": "spoiler-free-watch-poster.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 3222,
+      "width": 960,
+      "height": 540,
+      "source": {
+        "kind": "fixture",
+        "path": "fixtures/assets/spoiler-free-watch-poster.svg"
+      }
+    },
+    {
+      "id": "asset-rich-avatar",
+      "kind": "image",
+      "fileName": "lin-an-avatar.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 700,
+      "width": 120,
+      "height": 120,
+      "source": {
+        "kind": "fixture",
+        "path": "fixtures/assets/lin-an-avatar.svg"
+      }
+    },
+    {
+      "id": "asset-rich-brief-file",
+      "kind": "file",
+      "fileName": "spoiler-free-watch-rules.pdf",
+      "mimeType": "application/pdf",
+      "byteSize": 24576,
+      "source": {
+        "kind": "local",
+        "storageKey": "fixture:rich:spoiler-free-watch-rules.pdf"
+      }
+    },
+    {
+      "id": "asset-rich-missing-image",
+      "kind": "image",
+      "fileName": "room-light-reference.png",
+      "mimeType": "image/png",
+      "byteSize": 1024,
+      "width": 800,
+      "height": 600,
+      "source": {
+        "kind": "local",
+        "storageKey": "fixture:rich:room-light-reference.png"
+      }
+    }
+  ]
+}

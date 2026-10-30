@@ -1,0 +1,6 @@
+/* Local assets only. Keep this entry identical for the workbench and CLI. */
+@import "@fontsource-variable/geist/index.css";
+@import "@fontsource-variable/geist/wght-italic.css";
+@import "@fontsource-variable/geist-mono/index.css";
+@import "@fontsource-variable/geist-mono/wght-italic.css";
+@import "@fontsource-variable/noto-sans-sc/index.css";

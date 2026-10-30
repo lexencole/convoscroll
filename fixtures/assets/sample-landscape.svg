@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title description">
+  <title id="title">Deterministic landscape fixture</title>
+  <desc id="description">A warm abstract landscape used to test image sizing, captions, borders, and export rendering.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8e9d7"/>
+      <stop offset="0.52" stop-color="#e8c7ad"/>
+      <stop offset="1" stop-color="#b8c8c0"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#375f55"/>
+      <stop offset="1" stop-color="#748a70"/>
+    </linearGradient>
+    <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#50483f" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="540" fill="url(#sky)"/>
+  <circle cx="735" cy="135" r="58" fill="#fff8e5" opacity="0.92"/>
+  <path d="M0 335 165 205 290 302 430 155 620 330 770 230 960 360V540H0Z" fill="#6f8073" opacity="0.56"/>
+  <path d="M0 385 205 275 350 352 520 238 735 380 870 308 960 350V540H0Z" fill="#506b60" opacity="0.78"/>
+  <path d="M0 430C160 385 265 408 390 450s260 25 370-12c74-25 138-24 200-6v108H0Z" fill="url(#ground)"/>
+
+  <g fill="none" stroke="#fffef9" stroke-width="3" opacity="0.78">
+    <path d="M54 58h92M54 58v92"/>
+    <path d="M906 58h-92M906 58v92"/>
+    <path d="M54 482h92M54 482v-92"/>
+    <path d="M906 482h-92M906 482v-92"/>
+  </g>
+
+  <g filter="url(#soft-shadow)">
+    <rect x="58" y="374" width="360" height="100" rx="20" fill="#fffefb" fill-opacity="0.91"/>
+  </g>
+  <text x="88" y="416" fill="#292823" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="24" font-weight="600">Local fixture image</text>
+  <text x="88" y="450" fill="#6d6961" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17">960 × 540 · no network dependency</text>
+</svg>

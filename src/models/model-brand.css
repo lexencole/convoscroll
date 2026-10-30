@@ -1,0 +1,12 @@
+.message__avatar--brand {
+  border-color: color-mix(in srgb, var(--color-accent) 38%, var(--color-border-strong));
+  background: color-mix(in srgb, var(--color-accent-soft) 74%, var(--color-canvas-raised));
+}
+
+.model-brand-icon {
+  display: block;
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+  stroke: none;
+}

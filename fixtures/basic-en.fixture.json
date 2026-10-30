@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture-basic-en-v0",
+  "metadata": {
+    "title": "Rice left out overnight",
+    "locale": "en",
+    "createdAt": "2026-01-15T08:00:00Z",
+    "updatedAt": "2026-01-15T08:05:00Z"
+  },
+  "canvas": {
+    "preset": "portrait",
+    "width": 480,
+    "scale": 3
+  },
+  "theme": {
+    "id": "warm-editorial-v1"
+  },
+  "messages": [
+    {
+      "id": "msg-basic-001",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-basic-001",
+          "type": "markdown",
+          "source": "I left last night’s rice out. Can I still use it for fried rice today?"
+        }
+      ]
+    },
+    {
+      "id": "msg-basic-002",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-basic-002",
+          "type": "markdown",
+          "source": "Don’t eat it. Throw it away.\n\nRice can carry Bacillus cereus. Left out too long, it can form toxins that heat won’t destroy. Frying it again won’t make it safe.\n\nNext time, let the rice cool a little, then put it in the fridge. Cold rice is easier to fry the next day."
+        }
+      ]
+    }
+  ],
+  "assets": []
+}

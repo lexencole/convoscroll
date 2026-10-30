@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture-basic-v0",
+  "metadata": {
+    "title": "剩饭放了一夜",
+    "locale": "zh-CN",
+    "createdAt": "2026-01-15T08:00:00Z",
+    "updatedAt": "2026-01-15T08:05:00Z"
+  },
+  "canvas": {
+    "preset": "portrait",
+    "width": 480,
+    "scale": 3
+  },
+  "theme": {
+    "id": "warm-editorial-v1"
+  },
+  "messages": [
+    {
+      "id": "msg-basic-001",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-basic-001",
+          "type": "markdown",
+          "source": "昨晚的剩饭忘收了 在桌上放了一夜 今天还能炒饭吗"
+        }
+      ]
+    },
+    {
+      "id": "msg-basic-002",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-basic-002",
+          "type": "markdown",
+          "source": "别吃了，倒掉吧。\n\n米饭里常有蜡样芽孢杆菌，室温放久了会产生毒素。这种毒素不怕热，炒得再透也没用。\n\n下次吃不完，放凉一点就进冰箱。第二天拿来炒饭正好，冷饭粒更散，反而好炒。"
+        }
+      ]
+    }
+  ],
+  "assets": []
+}

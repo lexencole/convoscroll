@@ -1,0 +1,580 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ai-conversation-image:schema:conversation-document:v0",
+  "title": "ConversationDocument v0",
+  "description": "Historical Phase 0 draft schema retained as the explicit v0 migration input.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "metadata",
+    "canvas",
+    "theme",
+    "messages",
+    "assets"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 0
+    },
+    "id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "metadata": {
+      "$ref": "#/$defs/documentMetadata"
+    },
+    "canvas": {
+      "$ref": "#/$defs/canvas"
+    },
+    "theme": {
+      "$ref": "#/$defs/themeReference"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/message"
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "documentMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "subtitle": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "locale": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 35
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "canvas": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "preset",
+            "width",
+            "scale"
+          ],
+          "properties": {
+            "preset": {
+              "const": "portrait"
+            },
+            "width": {
+              "const": 480
+            },
+            "scale": {
+              "const": 3
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "preset",
+            "width",
+            "scale"
+          ],
+          "properties": {
+            "preset": {
+              "const": "wide"
+            },
+            "width": {
+              "const": 720
+            },
+            "scale": {
+              "const": 2
+            }
+          }
+        }
+      ]
+    },
+    "themeReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        }
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "role",
+        "blocks"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "role": {
+          "enum": [
+            "user",
+            "assistant",
+            "system",
+            "developer",
+            "tool",
+            "unknown"
+          ]
+        },
+        "sourceRole": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "model": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "avatarAssetId": {
+          "$ref": "#/$defs/stableId"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/block"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "unknown"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "then": {
+            "required": [
+              "sourceRole"
+            ]
+          }
+        }
+      ]
+    },
+    "block": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/markdownBlock"
+        },
+        {
+          "$ref": "#/$defs/imageBlock"
+        },
+        {
+          "$ref": "#/$defs/fileBlock"
+        },
+        {
+          "$ref": "#/$defs/reasoningBlock"
+        },
+        {
+          "$ref": "#/$defs/toolCallBlock"
+        },
+        {
+          "$ref": "#/$defs/toolResultBlock"
+        },
+        {
+          "$ref": "#/$defs/unsupportedBlock"
+        }
+      ]
+    },
+    "markdownBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "type": {
+          "const": "markdown"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "imageBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "assetId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "type": {
+          "const": "image"
+        },
+        "assetId": {
+          "$ref": "#/$defs/stableId"
+        },
+        "alt": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "caption": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "width": {
+          "enum": [
+            "small",
+            "medium",
+            "full"
+          ]
+        }
+      }
+    },
+    "fileBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "assetId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "type": {
+          "const": "file"
+        },
+        "assetId": {
+          "$ref": "#/$defs/stableId"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 300
+        }
+      }
+    },
+    "reasoningBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "source",
+        "displayState",
+        "exportState"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "type": {
+          "const": "reasoning"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "source": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/executionStatus"
+        },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "displayState": {
+          "$ref": "#/$defs/collapseState"
+        },
+        "exportState": {
+          "$ref": "#/$defs/exportState"
+        }
+      }
+    },
+    "toolCallBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "callId",
+        "toolName",
+        "input",
+        "status",
+        "displayState",
+        "exportState"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "type": {
+          "const": "toolCall"
+        },
+        "callId": {
+          "$ref": "#/$defs/stableId"
+        },
+        "toolName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "input": true,
+        "status": {
+          "$ref": "#/$defs/executionStatus"
+        },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "displayState": {
+          "$ref": "#/$defs/collapseState"
+        },
+        "exportState": {
+          "$ref": "#/$defs/exportState"
+        }
+      }
+    },
+    "toolResultBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "callId",
+        "output",
+        "status",
+        "displayState",
+        "exportState"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "type": {
+          "const": "toolResult"
+        },
+        "callId": {
+          "$ref": "#/$defs/stableId"
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "output": true,
+        "status": {
+          "$ref": "#/$defs/executionStatus"
+        },
+        "durationMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "displayState": {
+          "$ref": "#/$defs/collapseState"
+        },
+        "exportState": {
+          "$ref": "#/$defs/exportState"
+        }
+      }
+    },
+    "unsupportedBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "originalType",
+        "raw"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "type": {
+          "const": "unsupported"
+        },
+        "originalType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "raw": true
+      }
+    },
+    "collapseState": {
+      "enum": [
+        "collapsed",
+        "expanded"
+      ]
+    },
+    "exportState": {
+      "enum": [
+        "current",
+        "collapsed",
+        "expanded"
+      ]
+    },
+    "executionStatus": {
+      "enum": [
+        "neutral",
+        "pending",
+        "running",
+        "success",
+        "error"
+      ]
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "fileName",
+        "mimeType",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "kind": {
+          "enum": [
+            "image",
+            "file"
+          ]
+        },
+        "fileName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "mimeType": {
+          "type": "string",
+          "pattern": "^[^\\s/]+/[^\\s/]+$"
+        },
+        "byteSize": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source": {
+          "$ref": "#/$defs/assetSource"
+        }
+      }
+    },
+    "assetSource": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/fixtureAssetSource"
+        },
+        {
+          "$ref": "#/$defs/localAssetSource"
+        }
+      ]
+    },
+    "fixtureAssetSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "path"
+      ],
+      "properties": {
+        "kind": {
+          "const": "fixture"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^fixtures/assets/[A-Za-z0-9][A-Za-z0-9._/-]*$"
+        }
+      }
+    },
+    "localAssetSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "storageKey"
+      ],
+      "properties": {
+        "kind": {
+          "const": "local"
+        },
+        "storageKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        }
+      }
+    }
+  }
+}

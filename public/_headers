@@ -1,0 +1,6 @@
+# 暂不启用 CSP：先在生产地址和 Safari 上确认 Blob、WASM、KaTeX、IndexedDB 和下载不受影响。
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), display-capture=(), geolocation=(), microphone=(), payment=(), usb=()

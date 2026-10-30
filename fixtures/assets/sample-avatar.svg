@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-labelledby="title desc">
+  <title id="title">Atlas fixture avatar</title>
+  <desc id="desc">A deterministic forest green letter A on a warm background.</desc>
+  <rect width="120" height="120" rx="28" fill="#e4eee6"/>
+  <circle cx="60" cy="60" r="43" fill="#fffefa" stroke="#7d9985" stroke-width="4"/>
+  <path d="M38 83 56 36h9l18 47H72l-4-12H52l-4 12H38Zm17-21h10l-5-15-5 15Z" fill="#3f6550"/>
+</svg>

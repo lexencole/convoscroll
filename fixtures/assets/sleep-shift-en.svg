@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="460" viewBox="0 0 800 460" role="img" aria-labelledby="title desc">
+  <title id="title">Last week’s sleep compared with a conventional schedule</title>
+  <desc id="desc">Seven nights of sleep from around 03:00–04:00 to around noon, lasting 7 to 8 hours. The dashed outline marks 23:00–07:00. The actual midpoint is about 4.5 hours later.</desc>
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif; fill: #263a32; }
+      .label { font-size: 18px; }
+      .note { font-size: 15px; fill: #59685f; }
+      .tick { font-size: 14px; fill: #59685f; }
+    </style>
+  </defs>
+  <!-- Time axis: 20:00 to 14:00 the next day, 640px for 18 hours. -->
+  <rect width="800" height="460" rx="20" fill="#fbfaf6"/>
+  <text x="40" y="48" style="font-size:22px;font-weight:600">Enough sleep, just shifted later</text>
+  <rect id="night" x="120" y="108" width="358.52" height="284" fill="#e4e8ef"/>
+  <text x="120" y="96" class="note">Night</text>
+  <text x="478.52" y="96" class="note" text-anchor="middle">Sunrise 06:05</text>
+  <rect id="reference-window" x="226.67" y="108" width="284.44" height="284" rx="6" fill="none" stroke="#59685f" stroke-width="2" stroke-dasharray="6 6"/>
+  <text x="368.89" y="78" class="note" text-anchor="middle">Reference 23:00–07:00</text>
+  <text x="40" y="136" class="label">Mon</text>
+  <rect id="sleep-mon" data-start="03:30" data-end="11:30" x="386.67" y="120" width="284.44" height="20" rx="10" fill="#3f6b54"/>
+  <text x="40" y="176" class="label">Tue</text>
+  <rect id="sleep-tue" data-start="04:00" data-end="11:30" x="404.44" y="160" width="266.67" height="20" rx="10" fill="#3f6b54"/>
+  <text x="40" y="216" class="label">Wed</text>
+  <rect id="sleep-wed" data-start="03:30" data-end="11:00" x="386.67" y="200" width="266.66" height="20" rx="10" fill="#3f6b54"/>
+  <text x="40" y="256" class="label">Thu</text>
+  <rect id="sleep-thu" data-start="03:30" data-end="11:30" x="386.67" y="240" width="284.44" height="20" rx="10" fill="#3f6b54"/>
+  <text x="40" y="296" class="label">Fri</text>
+  <rect id="sleep-fri" data-start="04:00" data-end="11:00" x="404.44" y="280" width="248.89" height="20" rx="10" fill="#3f6b54"/>
+  <text x="40" y="336" class="label">Sat</text>
+  <rect id="sleep-sat" data-start="04:00" data-end="12:00" x="404.44" y="320" width="284.45" height="20" rx="10" fill="#3f6b54"/>
+  <text x="40" y="376" class="label">Sun</text>
+  <rect id="sleep-sun" data-start="03:00" data-end="11:00" x="368.89" y="360" width="284.44" height="20" rx="10" fill="#3f6b54"/>
+  <path d="M120.0 392V398" stroke="#59685f"/>
+  <text x="120.0" y="418" class="tick" text-anchor="middle">20:00</text>
+  <path d="M226.67 392V398" stroke="#59685f"/>
+  <text x="226.67" y="418" class="tick" text-anchor="middle">23:00</text>
+  <path d="M333.33 392V398" stroke="#59685f"/>
+  <text x="333.33" y="418" class="tick" text-anchor="middle">02:00</text>
+  <path d="M440.0 392V398" stroke="#59685f"/>
+  <text x="440.0" y="418" class="tick" text-anchor="middle">05:00</text>
+  <path d="M546.67 392V398" stroke="#59685f"/>
+  <text x="546.67" y="418" class="tick" text-anchor="middle">08:00</text>
+  <path d="M653.33 392V398" stroke="#59685f"/>
+  <text x="653.33" y="418" class="tick" text-anchor="middle">11:00</text>
+  <path d="M760.0 392V398" stroke="#59685f"/>
+  <text x="760.0" y="418" class="tick" text-anchor="middle">14:00</text>
+  <text x="40" y="440" class="note">Green bars: actual sleep, averaging 7.7 hours. Midpoint: 4.5 hours later.</text>
+</svg>

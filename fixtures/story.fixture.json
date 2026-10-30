@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture-story-v2",
+  "metadata": {
+    "title": "慢性复活可行性研究",
+    "subtitle": "熬夜是慢性自杀，那白天睡觉呢？",
+    "locale": "zh-CN",
+    "createdAt": "2026-09-19T10:00:00Z",
+    "updatedAt": "2026-10-02T10:00:00Z"
+  },
+  "canvas": {
+    "preset": "portrait",
+    "width": 480,
+    "scale": 3
+  },
+  "theme": {
+    "id": "warm-editorial-v1"
+  },
+  "messages": [
+    {
+      "id": "msg-story-001",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-story-001",
+          "type": "markdown",
+          "source": "熬夜是慢性自杀，那我白天睡觉，是不是在慢性复活？"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-002",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-story-review-note",
+          "type": "reasoning",
+          "title": "先核对这个对称命题",
+          "summary": "字面上互为反义，实际都把睡眠挪出了夜晚。",
+          "source": "熬夜和白天睡在字面上是一对反义词，可两者都把睡眠放在夜晚之外。先指出类比断在哪一步，再看用户的实际作息。",
+          "status": "success",
+          "displayState": "collapsed",
+          "exportState": "current"
+        },
+        {
+          "id": "block-story-002",
+          "type": "markdown",
+          "source": "## 关于「慢性复活」的初步审查\n\n结论先放这里：**语法上完美对称，生理上不予受理。**\n\n你的推理大概是：\n\n1. 熬夜 = 晚上不睡 = 慢性自杀\n2. 白天睡 = 熬夜的反面 = ~~慢性复活~~\n3. 所以……\n\n卡在第 2 步。白天睡觉通常是熬夜的下半场，两件事是同一集的上下半。\n\n- 熬夜：晚上该睡的没睡\n- 白天睡：把晚上那份挪到了白天\n  - 挪得过去的是时长\n  - 挪不过去的是生物钟，也就是 *circadian rhythm*"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-003",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-story-003",
+          "type": "markdown",
+          "source": "可我又不缺觉 每天都睡够7到8小时的\n\n就是凌晨三四点睡 中午起 这也算熬夜？上周的记录发你了"
+        },
+        {
+          "id": "block-story-sleep-file",
+          "type": "file",
+          "assetId": "asset-story-sleep-log",
+          "label": "上周作息"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-004",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-story-sleep-call",
+          "type": "toolCall",
+          "callId": "call-story-sleep",
+          "toolName": "sleep_summary",
+          "summary": "统计上周的睡眠时长和睡眠中点。",
+          "input": {
+            "file": "上周作息.csv",
+            "reference": "23:00-07:00"
+          },
+          "status": "success",
+          "displayState": "collapsed",
+          "exportState": "current"
+        },
+        {
+          "id": "block-story-sleep-result",
+          "type": "toolResult",
+          "callId": "call-story-sleep",
+          "summary": "平均 7.7 小时，睡眠中点 07:30。",
+          "output": {
+            "averageHours": 7.7,
+            "averageMidpoint": "07:30",
+            "referenceMidpoint": "03:00",
+            "shiftHours": 4.5
+          },
+          "status": "success",
+          "displayState": "collapsed",
+          "exportState": "current"
+        },
+        {
+          "id": "block-story-004",
+          "type": "markdown",
+          "source": "## 时长及格，时间不及格\n\n记录看完了。你每天平均睡 **7.7 小时**，一点不缺，只是整段睡眠往后挪了。\n\n| 项目 | 常规作息 | 你的作息 |\n| :-- | :--: | --: |\n| 入睡 | 23:00 | 03:00–04:00 |\n| 起床 | 07:00 | 11:00–12:00 |\n| 睡眠中点 | 03:00 | 07:30 |\n| 睡着时窗外 | 黑 | 亮 |\n\n两个中点相减：\n\n$$\n07{:}30 - 03{:}00 = 4.5\\,\\mathrm{h}\n$$\n\n你在东八区，生物钟晚了 4.5 小时，就是 $8 - 4.5 = 3.5$，也就是 UTC+3:30。用这个时区的首都只有一个：德黑兰。"
+        },
+        {
+          "id": "block-story-sleep-image",
+          "type": "image",
+          "assetId": "asset-story-sleep-chart",
+          "alt": "上周七天的睡眠时段，整体比常规作息晚约 4.5 小时",
+          "caption": "虚线框是 23:00–07:00，绿条是你上周的实际睡眠。",
+          "width": "full"
+        },
+        {
+          "id": "block-story-005",
+          "type": "markdown",
+          "source": "**你人还在本地，生物钟已经到德黑兰了。**"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-005",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-story-006",
+          "type": "markdown",
+          "source": "所以我每天醒来 身体其实在德黑兰？？\n\n那我能不能申请出差补贴"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-006",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-story-007",
+          "type": "markdown",
+          "source": "可以申请，但审批人是太阳，它只认本地时间。\n\n> 出差补贴的前提是人到了。你只寄过去了生物钟。\n\n换算写成代码，以后作息再漂，你可以自己查身体今天在哪：\n\n```python\nTIMEZONES = {3.5: \"德黑兰\", 4: \"迪拜\", 5: \"塔什干\", 8: \"本地\"}\n\ndef 身体所在地(晚了几小时: float, 本地: float = 8) -> str:\n    offset = 本地 - 晚了几小时\n    return TIMEZONES.get(offset, f\"UTC+{offset}\")\n\nprint(身体所在地(4.5))  # 德黑兰\n```\n\n---\n\n生物钟一天大约只能往回挪 1 小时，从德黑兰回到本地时间，最快也要 `4.5` 天。"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-007",
+      "role": "user",
+      "displayName": "Levi",
+      "blocks": [
+        {
+          "id": "block-story-008",
+          "type": "markdown",
+          "source": "行 那你给我一个正经的复活方案 我照做"
+        }
+      ]
+    },
+    {
+      "id": "msg-story-008",
+      "role": "assistant",
+      "displayName": "Claude",
+      "model": "Claude",
+      "blocks": [
+        {
+          "id": "block-story-009",
+          "type": "markdown",
+          "source": "### 正经复活方案\n\n> 真正的复活，是今晚早睡半小时。\n\n- [ ] 每晚提前 30 分钟躺下，九天回到 23:00\n- [ ] 起床后先晒 10 分钟太阳\n  - 阴天也算，站到窗边就行\n  - 别戴墨镜，这 10 分钟是给生物钟看的\n- [ ] 午睡不超过 30 分钟\n- [x] 承认「慢性复活」是个好标题\n\n回程这几天，睡前把手机调成 `勿扰模式`。"
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "id": "asset-story-sleep-log",
+      "kind": "file",
+      "fileName": "上周作息.csv",
+      "mimeType": "text/csv",
+      "byteSize": 191,
+      "source": {
+        "kind": "fixture",
+        "path": "fixtures/assets/sleep-week.csv"
+      }
+    },
+    {
+      "id": "asset-story-sleep-chart",
+      "kind": "image",
+      "fileName": "sleep-shift.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 3635,
+      "width": 800,
+      "height": 460,
+      "source": {
+        "kind": "fixture",
+        "path": "fixtures/assets/sleep-shift.svg"
+      }
+    }
+  ]
+}

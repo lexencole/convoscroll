@@ -1,0 +1,397 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture-long-v0",
+  "metadata": {
+    "title": "Long 对话 Fixture",
+    "subtitle": "25 条独立 Message，覆盖长回答、代码、公式、宽表格与多图重复布局压力。",
+    "locale": "zh-CN",
+    "createdAt": "2026-03-10T01:00:00Z",
+    "updatedAt": "2026-03-10T01:45:00Z"
+  },
+  "canvas": {
+    "preset": "portrait",
+    "width": 480,
+    "scale": 3
+  },
+  "theme": {
+    "id": "warm-editorial-v1"
+  },
+  "messages": [
+    {
+      "id": "msg-long-001",
+      "role": "system",
+      "displayName": "System",
+      "blocks": [
+        {
+          "id": "block-long-001",
+          "type": "markdown",
+          "source": "这是一份用于长画布、滚动和导出压力测试的确定性虚构对话。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-002",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-002",
+          "type": "markdown",
+          "source": "我想把一段长对话变成适合手机阅读的 PNG，第一个应该确认的目标是什么？"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-003",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-003",
+          "type": "markdown",
+          "source": "首先确认输出约束：\n\n- 手机上无需横向滚动。\n- 文字无需放大即可阅读。\n- 代码、公式、表格和图片不被裁切。\n- 相同输入可复现相同布局。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-004",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-004",
+          "type": "markdown",
+          "source": "逻辑宽度与导出像素宽度之间是什么关系？"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-005",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-005",
+          "type": "markdown",
+          "source": "可以写成行内公式 $W_{output}=W_{css}\\times s$。当逻辑宽度为 480 CSS px，倍率为 3 时：\n\n$$\nW_{output}=480\\times3=1440\\text{ px}\n$$\n\n倍率改变像素密度，不应改变画布内部的换行位置。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-006",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-006",
+          "type": "markdown",
+          "source": "给一段可读的 TypeScript 代码，演示如何校验两个画布预设。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-007",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-007",
+          "type": "markdown",
+          "source": "```ts\ntype Canvas =\n  | { preset: \"portrait\"; width: 480; scale: 3 }\n  | { preset: \"wide\"; width: 720; scale: 2 };\n\nconst canvases: Canvas[] = [\n  { preset: \"portrait\", width: 480, scale: 3 },\n  { preset: \"wide\", width: 720, scale: 2 },\n];\n\nfunction outputWidth(canvas: Canvas): number {\n  return canvas.width * canvas.scale;\n}\n\nfor (const canvas of canvases) {\n  if (outputWidth(canvas) !== 1440) {\n    throw new Error(`Unexpected output width for ${canvas.preset}`);\n  }\n}\n```\n\n这段代码同时测试缩进、联合类型、模板字符串和多行代码块高度。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-008",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-008",
+          "type": "markdown",
+          "source": "宽表格在窄画布上是最容易出问题的内容之一，请给一个完整的对照表。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-009",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-009",
+          "type": "markdown",
+          "source": "| 内容类型 | 输入形态 | 常见风险 | Portrait 策略 | Wide 策略 | 导出前检查 | 错误恢复 | 数据保留 | 预期验收 |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n| 普通正文 | 中英文段落与长链接 | 单词过长造成溢出 | 允许确定换行 | 保持相同行高 | 检查字体已就绪 | 给出可执行提示 | 保留 Markdown 源文 | 不裁切且字号可读 |\n| 代码块 | TypeScript、Python、JSON | 长行和缩进增加宽度 | 软换行并保留缩进层级 | 仍不依赖横向滚动 | 检查语法高亮资源 | 降级为安全纯文本 | 保留原始代码 | 每一行内容均可见 |\n| 数学公式 | 行内与块级 LaTeX | 符号宽度超过画布 | 适度缩放或断行 | 保留居中层级 | 等待数学字体 | 显示源公式与诊断 | 保留 LaTeX | 不空白也不被截断 |\n| 本地图片 | SVG 或位图资产 | 解码未完成或比例错误 | 限制最大宽度并保比例 | 允许更宽但不拉伸 | 等待 decode 完成 | 显示缺失资产占位 | 通过 assetId 稳定引用 | 图注、Alt 和边界完整 |"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-010",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-010",
+          "type": "markdown",
+          "source": "如果从零设计整个数据到图片的链路，请给一个较长的回答：包括数据模型、渲染边界、资产、容错、验收和不该提前做的事情。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-011",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-011-a",
+          "type": "markdown",
+          "source": "# 从数据到长图的稳定链路\n\n最直接的设计不是先做一个功能繁多的编辑器，而是先定义什么输入可以被稳定地排版。如果数据边界不稳定，编辑器、导入器、预览和导出就会各自发明一套对话表示，最终同一份内容在不同环节中产生不同结果。\n\n`ConversationDocument` 应该是唯一的结构化输入。文档包含版本、稳定 ID、画布设置、主题引用、独立 Message、有序 Block 和 Asset 元数据。Markdown 只表达正文，角色、模型、图片、附件、Reasoning 和 Tool 都使用明确字段。这样做的目的不是追求抽象完美，而是确保每个环节解释的是同一份数据。"
+        },
+        {
+          "id": "block-long-011-b",
+          "type": "markdown",
+          "source": "## 1. 模型边界\n\nMessage 是基础单位，不强制用户与助手一一配对。真实对话会出现系统消息、开发者约束、工具返回、重新生成以及来源未知的消息，强制成对只会丢失这些语义。\n\n每个 Message 内部保留 Block 顺序，因为模型可能先给出说明，再调用工具，接着引用工具结果，最后补充图片。稳定 ID 用于编辑、重排和引用；只要实体仍是同一个，修改文字时不应重建 ID。\n\n- 版本不兼容：拒绝覆盖当前文档。\n- 未知 Block：转换为 `unsupported` 并保留 `raw`。\n- 字段缺失：返回带路径的诊断，不默默填充。\n- 导入失败：原文档和当前项目都保持不变。"
+        },
+        {
+          "id": "block-long-011-c",
+          "type": "markdown",
+          "source": "## 2. 渲染边界\n\n`ConversationCanvas` 是纯展示组件。它可以根据文档与资产解析结果生成布局，但不应包含删除按钮、拖拽句柄、编辑焦点或只在 Hover 时才出现的核心内容。预览阶段仅缩放这张固定逻辑宽度的画布，不让预览容器宽度反过来改变换行。\n\n导出时仍使用当前这个 Canvas。系统可以为导出派生折叠状态或透明背景设置，但不应修改用户正在编辑的文档。在绘制像素前，必须等待字体、图片、SVG、图标和公式所需资源就绪。\n\n> 可复现并不意味所有平台像素级完全相同；它首先意味着对已声明的支持环境，相同文档、主题、画布和资产不会因为随机值或未就绪资源而改变结构。"
+        },
+        {
+          "id": "block-long-011-d",
+          "type": "markdown",
+          "source": "## 3. 资产与 Local-first\n\nBlock 仅保存 `assetId`，Asset 记录稳定元数据和本地来源。临时 Object URL 不能被当成持久标识，远程图片 URL 也不应直接进入 MVP 文档，因为它们可能跨域失败、被防盗链或在导出时已经失效。\n\n同一个 Asset 可在多个 Image Block 中复用。Alt、Caption 和展示宽度属于使用位置，因此放在 Block 上，不放在 Asset 上。资产缺失时应显示带文件名或 ID 的安全占位，同时保留原始引用，不通过删除 Block 来让验证“通过”。\n\n这条链路默认不需要账号、数据库或服务器截图。未来如果引入云端批量渲染，需要重新明确上传数据、保留时间、成本和用户授权，不能将它视为当前本地链路的透明替代。"
+        },
+        {
+          "id": "block-long-011-e",
+          "type": "markdown",
+          "source": "## 4. 溢出与错误策略\n\n静态图片不能依赖用户横向滚动，因此每类宽内容都要有对应规则：\n\n1. 代码长行采用可预期的软换行，保留缩进和语法高亮。\n2. 表格的列宽应有上限，单元格允许多行排版。\n3. 宽公式先尝试语义上合理的断行，无法安全排版时显示可理解的诊断。\n4. 图片保持原始比例且限制最大宽度，加载失败不影响其他消息。\n5. 超长文档在导出前评估高度与内存，必要时按完整 Message 边界分片。\n\n单个 Message 本身可能超过浏览器安全高度，因此“只按 Message 分片”并不是完整方案。这个极端情况需要在生产导出阶段单独决策，而不在早期 Fixture 阶段假装已经解决。"
+        },
+        {
+          "id": "block-long-011-f",
+          "type": "markdown",
+          "source": "## 5. 验收与阶段边界\n\n验收不只是页面“看起来能打开”。应使用固定 Basic、Rich、Long 和 Broken Fixture，检查结构验证、资产引用、滚动稳定性、水平溢出、资源就绪和导出完整性。每个阶段都需要记录已知限制，并在审阅点停下。\n\n当前不应提前实现账号、云同步、主题市场、任意 JSON 导入、平台爬取或 Notion 式编辑器。这些功能可能有价值，但它们对证明“结构化对话能否稳定地生成高质量长图”没有前置必要性。\n\n最终判断很直接：如果相同的结构化文档能在受支持的环境中稳定得到完整、可读、无意外裁切的画布，那么编辑和导入体验才有可靠的基础。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-012",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-012",
+          "type": "markdown",
+          "source": "接下来测试本地图片。先以中等宽度显示一次，并说明应该检查哪些边界。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-013",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-013-a",
+          "type": "markdown",
+          "source": "中等宽度样本应检查图片是否保持 16:9 比例、四个角的细线是否可见、底部文字是否清晰，以及 Caption 与图片之间的间距是否稳定。"
+        },
+        {
+          "id": "block-long-013-b-image",
+          "type": "image",
+          "assetId": "asset-long-landscape",
+          "alt": "中等宽度抽象山景测试图",
+          "caption": "第一次使用：Medium 宽度与完整图注。",
+          "width": "medium"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-014",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-014",
+          "type": "markdown",
+          "source": "同一个资产可以在不同 Block 中复用吗？请用小图和通栏图做对照。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-015",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-015-a",
+          "type": "markdown",
+          "source": "可以。下面两个 Image Block 引用同一 `assetId`，但拥有独立的 Alt、Caption 和宽度。这能同时测试资产复用与连续多图布局。"
+        },
+        {
+          "id": "block-long-015-b-image-small",
+          "type": "image",
+          "assetId": "asset-long-landscape",
+          "alt": "小尺寸抽象山景测试图",
+          "caption": "第二次使用：Small 宽度。",
+          "width": "small"
+        },
+        {
+          "id": "block-long-015-c-image-full",
+          "type": "image",
+          "assetId": "asset-long-landscape",
+          "alt": "通栏抽象山景测试图",
+          "caption": "第三次使用：Full 宽度，仍保持原始比例。",
+          "width": "full"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-016",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-016",
+          "type": "markdown",
+          "source": "请补一段中英文混排，检查标点、英文单词和 `inline code` 的基线。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-017",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-017",
+          "type": "markdown",
+          "source": "预览阶段的 Preview Stage 可以缩放整张 Canvas，但不能改变它的 logical width；否则用户在右侧看到的换行，会与最终 export PNG 不同。`transform: scale(...)` 可用于视觉缩放，但真实排版宽度必须稳定。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-018",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-018",
+          "type": "markdown",
+          "source": "如何检查引用到未登记 Asset 的 Block？用一段简单的伪代码表示。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-019",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-019",
+          "type": "markdown",
+          "source": "```text\nassetById = index(document.assets)\nfor each message in document.messages:\n  for each block in message.blocks:\n    if block has assetId and assetById does not contain block.assetId:\n      report(path_to(block.assetId), \"ASSET_NOT_FOUND\")\n      keep(block)\n```\n\n关键是“报告并保留”，而不是删除错误 Block 后假装文档没有问题。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-020",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-020",
+          "type": "markdown",
+          "source": "再用一个稍长的块级公式测试居中、字体加载和宽度策略。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-021",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-021",
+          "type": "markdown",
+          "source": "可以使用包含多个项的表达式：\n\n$$\nQ=\\sum_{i=1}^{n} w_i\\left(C_i+R_i+A_i\\right),\\qquad \\sum_{i=1}^{n}w_i=1\n$$\n\n其中 $C_i$ 代表内容完整性，$R_i$ 代表可读性，$A_i$ 代表资产就绪程度。公式渲染失败时应保留 LaTeX 源文并提供诊断。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-022",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-022",
+          "type": "markdown",
+          "source": "导出前最后一次检查应该包含哪些错误和资源状态？"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-023",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-023",
+          "type": "markdown",
+          "source": "导出前检查表：\n\n- [x] `document.fonts` 已就绪。\n- [x] 本地图片已完成解码。\n- [x] 公式与代码高亮资源已就绪。\n- [x] 不存在意外水平溢出。\n- [x] 画布高度和预计内存未超过已验证阈值。\n- [x] 折叠区的导出状态已确定。\n- [x] 失败时不修改原始 `ConversationDocument`。"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-024",
+      "role": "user",
+      "displayName": "周川",
+      "blocks": [
+        {
+          "id": "block-long-024",
+          "type": "markdown",
+          "source": "如果 Long Fixture 加载成功，可以直接说明生产级 PNG 导出已经完成吗？"
+        }
+      ]
+    },
+    {
+      "id": "msg-long-025",
+      "role": "assistant",
+      "displayName": "Atlas",
+      "model": "Atlas Demo 2.4",
+      "blocks": [
+        {
+          "id": "block-long-025",
+          "type": "markdown",
+          "source": "不能。Long Fixture 加载成功只能说明结构可以被读取，并为高画布渲染提供了稳定输入。生产级导出还需要在受支持的浏览器中实测像素完整性、耗时、内存、字体、图片解码、超长内容和失败恢复。这份 Fixture 是后续验证的输入，不是验证结果本身。"
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "id": "asset-long-landscape",
+      "kind": "image",
+      "fileName": "sample-landscape.svg",
+      "mimeType": "image/svg+xml",
+      "byteSize": 2043,
+      "width": 960,
+      "height": 540,
+      "source": {
+        "kind": "fixture",
+        "path": "fixtures/assets/sample-landscape.svg"
+      }
+    }
+  ]
+}

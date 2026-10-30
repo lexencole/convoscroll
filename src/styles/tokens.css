@@ -1,0 +1,298 @@
+/* Warm Editorial Theme v1 semantic design tokens. */
+:root {
+  color-scheme: light;
+  --font-family-body:
+    "Geist Variable", "PingFang SC", "Noto Sans SC Variable",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-family-display: var(--font-family-body);
+  --font-family-mono: "Geist Mono Variable", "PingFang SC", "Noto Sans SC Variable", ui-monospace, monospace;
+  --font-family-meta: var(--font-family-body);
+  --font-weight-body: 400;
+  --font-weight-display: 600;
+  --canvas-header-background:
+    radial-gradient(circle at 94% 0%, var(--color-accent-soft), transparent 34%),
+    var(--color-canvas);
+  --canvas-title-letter-spacing: -0.006em;
+  --content-heading-letter-spacing: 0;
+  font-family: var(--font-family-body);
+  /* Chinese system fonts have no italic face; let the browser slant them, but
+     never fake bold. */
+  font-synthesis: style;
+  text-rendering: optimizeLegibility;
+
+  --color-workspace: #e9e8e3;
+  --color-workspace-grid: rgba(59, 62, 57, 0.045);
+  --color-canvas: #fbfaf7;
+  --color-canvas-raised: #ffffff;
+  --color-ink: #20221f;
+  --color-ink-soft: #5f635d;
+  --color-ink-faint: #666a64;
+  --color-border: #dedfd9;
+  --color-border-strong: #c8cbc3;
+  --color-accent: #44624c;
+  --color-accent-soft: #e5eee7;
+  --color-user: #e7eee8;
+  --color-user-border: #bdccbf;
+  --color-assistant: #fdfdfb;
+  --color-assistant-border: #d8ddd5;
+  --color-assistant-line: #91a597;
+  --color-system: #f0efe9;
+  --color-code: #101110;
+  --color-code-ink: #f3f4ef;
+  --color-code-comment: #7f8981;
+  --color-code-keyword: #d0aa87;
+  --color-code-string: #a8c3a4;
+  --color-code-constant: #c1afd0;
+  --color-code-function: #a8bec5;
+  --color-code-variable: #dde1da;
+  --color-code-punctuation: #929a94;
+  --color-success: #297247;
+  --color-success-soft: #e0f0e5;
+  --color-running: #336d8b;
+  --color-running-soft: #e0edf3;
+  --color-pending: #956b25;
+  --color-pending-soft: #f6edd9;
+  --color-error: #a2453e;
+  --color-error-soft: #f7e7e4;
+  --color-neutral-soft: #eff0ec;
+  --color-control: var(--color-canvas-raised);
+  --color-control-hover: color-mix(in srgb, var(--color-canvas-raised) 86%, var(--color-accent-soft));
+  --color-control-selected: var(--color-accent-soft);
+  --color-focus-ring: var(--color-accent-soft);
+  --color-overlay: rgba(35, 39, 33, 0.38);
+  --color-role-user: #6f9279;
+  --shadow-canvas: 0 24px 70px rgba(35, 39, 33, 0.17), 0 2px 8px rgba(35, 39, 33, 0.08);
+  --shadow-control: 0 8px 24px rgba(35, 39, 33, 0.08);
+  --shadow-app-bar: 0 9px 28px rgba(35, 39, 33, 0.09);
+  --shadow-floating-control: 0 18px 42px rgba(35, 39, 33, 0.2);
+  --shadow-selection-ring: 0 0 0 2px var(--color-accent-soft);
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --size-touch-target: 44px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  --font-2xs: 9px;
+  --font-xs: 10px;
+  --font-sm: 12px;
+  --font-md: 15px;
+  --font-lg: 18px;
+  --font-xl: 26px;
+  --font-code: 10.5px;
+  --font-icon-label: 8px;
+  --font-content-h1: 19px;
+  --font-content-h2: 17px;
+  --font-content-h3: 16px;
+  --font-control: 13px;
+  --font-action: var(--font-sm);
+  --line-control: 1.45;
+  --font-source-editor: 12px;
+  --font-dialog-title: 20px;
+  --line-dialog-title: 1.3;
+  --font-table: 13px;
+  --line-table: 1.5;
+  --line-body: 1.68;
+  --emphasis-edge-space: 0.16em;
+  /* Canvas supporting text. A 480px canvas reads at ~0.81x on phones,
+     so nothing but the file badge drops below 11px. */
+  --canvas-font-lead: 14px;
+  --canvas-font-secondary: 13px;
+  --canvas-font-label: 12px;
+  --canvas-font-pill: 11px;
+  --canvas-font-badge: 10px;
+  --canvas-weight-label: 600;
+  --line-secondary: 1.55;
+  --message-user-max-width: 88%;
+  --message-user-max-width-en: 96%;
+
+  --canvas-header-padding-x: 34px;
+  --canvas-header-padding-top: 38px;
+  --canvas-header-padding-bottom: 28px;
+  --stream-padding-x: 28px;
+  --stream-padding-top: 30px;
+  --stream-padding-bottom: 38px;
+  --stream-gap: 32px;
+  --message-user-padding-x: 20px;
+  --message-user-padding-y: 16px;
+  --message-assistant-padding: 20px;
+  --message-assistant-border-width: 3px;
+  --message-assistant-outline-width: 1px;
+  --message-avatar-radius: 10px;
+  --message-user-radius: 14px 6px 14px 14px;
+  --message-assistant-radius: 14px;
+  --message-model-background: var(--color-neutral-soft);
+
+  --checkbox-size: 15px;
+  --checkbox-radius: 4px;
+  --checkbox-border: #9ca49c;
+  --checkbox-background: #ffffff;
+  --checkbox-checked: var(--color-accent);
+  --checkbox-mark: #ffffff;
+  --task-item-gap: 0.52em;
+}
+
+/* Workbench tokens are independent of the canonical canvas theme. */
+:root {
+  --ui-workspace: #f2f0eb;
+  --ui-surface: #f9f7f3;
+  --ui-surface-sunken: #efede8;
+  --ui-surface-hover: #f1efe9;
+  --ui-surface-glass: linear-gradient(180deg, rgba(248,246,241,.66) 10%, rgba(248,246,241,.88));
+  --ui-line: rgba(26,25,21,.10);
+  --ui-line-strong: rgba(26,25,21,.22);
+  --ui-line-hover: rgba(26,25,21,.14);
+  --ui-shadow-button: 0 0 0 1px rgba(26,25,21,.10), 0 1px 2px rgba(26,25,21,.08);
+  --ui-shadow-float: 0 0 0 1px rgba(26,25,21,.08), 0 8px 24px rgba(26,25,21,.10), 0 2px 6px rgba(26,25,21,.05);
+  --ui-shadow-surface: var(--ui-shadow-float);
+  --ui-shadow-paper: 0 0 0 1px rgba(26,25,21,.05), 0 4px 16px rgba(26,25,21,.04);
+  --ui-field-border: var(--ui-line-hover);
+  --ui-field-hover-border: var(--ui-line-strong);
+  --ui-field-focus-border: var(--ui-line-strong);
+  --ui-field-focus-shadow: none;
+  --ui-title-focus-shadow: 0 1px 0 var(--ui-line-strong);
+  --ui-focus-color: var(--ui-muted);
+  --ui-radius-sm: 8px;
+  --ui-radius-md: 12px;
+  --ui-radius-lg: 14px;
+  --ui-radius-xl: 20px;
+  --ui-control: 32px;
+  --ui-control-lg: 36px;
+  --ui-field: 38px;
+  --ui-chip: 28px;
+  --ui-add-chip: 26px;
+  --ui-icon: 16px;
+  --ui-icon-small: 14px;
+  --ui-help-control: 24px;
+  --ui-calendar-width: 320px;
+  --ui-calendar-day: 32px;
+  --ui-font: 13px;
+  --ui-font-sm: 12px;
+  /* Toolbar format controls share the toolbar's own text size and never grow with the window. */
+  --ui-toolbar-font-size: 13px;
+  --ui-font-title: 17px;
+  --ui-font-glyph: 14px;
+  /* Input and select typography stays consistent across screen sizes. */
+  --ui-font-field: 13px;
+  --ui-font-select: 13px;
+  --ui-caret-width: 1px;
+  --ui-italic-caret-angle: -12deg;
+  --ui-italic-caret-gap: 1px;
+  --ui-caret-blink: 1s;
+  --ui-checkbox-size: 16px;
+  --ui-checkbox-radius: 4px;
+  --ui-weight-medium: 500;
+  --ui-weight-strong: 600;
+  --ui-header-height: 52px;
+  --ui-brand-size: 26px;
+  --ui-toolbar-width: 720px;
+  --ui-format-width: 72px;
+  --ui-code-language-width: 136px;
+  --ui-context-width: 18em; /* about 12 Chinese characters of the title before it is shortened */
+  --ui-menu-width: 216px;
+  --ui-panel-width: 360px;
+  --ui-identity-width: 312px;
+  --ui-duration-width: calc(9ch + 2 * var(--space-4));
+  --ui-avatar-size: 40px;
+  --ui-notice-width: 420px;
+  --ui-chip-offset: 10px;
+  --ui-focus-width: 1px;
+  --ui-focus-offset: -2px;
+  --ui-layer-chip: 3;
+  --ui-layer-toolbar: 10;
+  --ui-layer-notice: 24;
+  --ui-layer-panel: 32;
+  --ui-layer-menu: 34;
+  --ui-motion-fast: 150ms;
+  --ui-motion-enter: 200ms;
+  --ui-motion-ease: cubic-bezier(.23, 1, .32, 1);
+  --ui-motion-distance: 4px;
+  --ui-scroll-thumb: color-mix(in srgb, var(--color-ink) 52%, transparent);
+  --ui-scroll-thumb-hover: color-mix(in srgb, var(--color-ink) 68%, transparent);
+  --ui-scroll-width: 12px;
+  --ui-scroll-inset: 4px;
+  --ui-scroll-inset-active: 3px;
+  --ui-scroll-compact: 4px;
+  --ui-ink: #1a1915;
+  --ui-muted: #5f5c55;
+  --ui-faint: #6e6b63;
+  --ui-accent: #44624c;
+  --ui-accent-top: #52735b;
+  --ui-accent-hover: #3c5844;
+  --ui-accent-soft: #e5eee7;
+  --ui-accent-soft-hover: #dbe8df;
+  --ui-accent-ink: #2e4a37;
+  --ui-on-accent: #fff;
+  --ui-field-background: #f4f2ed;
+  --ui-danger: #994352;
+  --ui-success: #466e51;
+  --ui-warning: #8c6231;
+  --ui-scrim: rgba(20,19,17,.18);
+  --ui-radius-pill: 9999px;
+  --ui-font-label: 13px;
+  --ui-font-brand: 16px;
+  --ui-font-brand-chevron: 12px;
+  --ui-shadow-control: inset 0 1px 0 rgba(255,253,248,.55), 0 0 0 .5px rgba(26,25,21,.07), 0 3px 5px rgba(26,25,21,.035), 0 9px 24px -8px rgba(26,25,21,.14);
+  --ui-shadow-primary: 0 2px 4px -2px rgba(26,25,21,.16);
+  --ui-shadow-bar: 0 0 0 .5px rgba(26,25,21,.08), 0 2px 4px -1px rgba(26,25,21,.06), 0 12px 24px -6px rgba(26,25,21,.12);
+  --ui-shadow-selected: 0 1px 4px rgba(26,25,21,.10);
+  --ui-toolbar-height: 44px;
+  --ui-toolbar-gap: 10px;
+  --ui-toolbar-hover-lift: 1px;
+  --ui-toolbar-hover-scale: 1.08;
+  --ui-canvas-gap: 22px;
+  --ui-bar-padding: 10px;
+  --ui-bar-blur: 10px;
+  --ui-header-gap: 20px;
+  --ui-brand-padding: 14px;
+  --ui-button-padding: 10px;
+  --ui-menu-row: 34px;
+  --ui-space-tight: 2px;
+  --ui-space-small: 6px;
+  --ui-spring-control: linear(0, .087, .198, .321, .447, .566, .68, .779, .864, .933, .988, 1.029, 1.057, 1.076, 1.085, 1.088, 1.085, 1.079, 1.07, 1.06, 1.05, 1.039, 1.03, 1.021, 1.014, 1.007, 1.002, .999, .996, .994, .993, .993, .994, .995, .996, .997, .998, 1);
+  --ui-motion-control: 350ms;
+  --ui-motion-press: 100ms;
+  --ui-press-scale: .97;
+  --ui-nav-rail-width: 44px;
+  --ui-nav-line-width: 14px;
+  --ui-nav-active-width: 24px;
+  --ui-nav-line-height: 2px;
+  --ui-nav-row-height: 14px;
+  --ui-nav-hover-width: 32px;
+  --ui-nav-near-width: 20px;
+  --ui-nav-preview-width: 264px;
+  --ui-nav-viewport-inset: 144px;
+  --ui-nav-layer: 9;
+}
+@media (any-pointer: coarse) {
+  :root {
+    --font-control: 16px;
+    --font-source-editor: 16px;
+    --ui-control: 44px;
+    --ui-control-lg: 44px;
+    --ui-field: 44px;
+    --ui-chip: 44px;
+    --ui-add-chip: 32px;
+    --ui-toolbar-height: 48px;
+    --ui-toolbar-gap: 8px;
+    --ui-canvas-gap: 16px;
+    --ui-menu-row: 44px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --ui-toolbar-gap: 8px;
+    --ui-canvas-gap: 16px;
+  }
+}

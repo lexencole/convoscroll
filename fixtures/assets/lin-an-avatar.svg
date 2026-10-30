@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-labelledby="title desc">
+  <title id="title">林岸的虚构头像</title>
+  <desc id="desc">暖灰背景上的抽象门洞、灯光与地平线图形。</desc>
+  <rect width="120" height="120" rx="28" fill="#e9e4d8"/>
+  <circle cx="60" cy="60" r="43" fill="#fffdf8" stroke="#687b72" stroke-width="4"/>
+  <path d="M36 82V50h48v32H73V58c0-8-6-14-13-14s-13 6-13 14v24Z" fill="#425850"/>
+  <path d="M52 82V59c0-5 4-9 8-9s8 4 8 9v23Z" fill="#e2b96f"/>
+  <path d="M31 83h58" fill="none" stroke="#345047" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="60" cy="68" r="5" fill="#fff5d4"/>
+</svg>
